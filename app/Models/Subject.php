@@ -8,14 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
+    protected $table = 'subjects';
 
-    protected $fillable = [
+    protected $fillebal = [
+        'subject_code',
+        'cource_id',
         'name',
-        'year',
-        'stream_id',
     ];
-
-    public function stream(){
-        return $this->belongsTo(Stream::class, 'stream_id');
-    }
 }
