@@ -3,16 +3,32 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cource;
 use App\Models\Stream;
 use App\Models\Student;
+use App\Repositories\AssginamnetRepository;
+use App\Repositories\CourceRepository;
+use App\Repositories\Interface\SubjectRepository;
+use App\Repositories\StudentRepository;
+use App\Repositories\SubjectRepository as RepositoriesSubjectRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    private $courceRepo,
+            $assignamnetRepo,
+            $studentRepo,
+            $subjectRepo;
+    public function __construct(CourceRepository $courceRepository, AssginamnetRepository $assignamnetRepository, StudentRepository $studentRepository, RepositoriesSubjectRepository $subjectRepository) {
+        $this->courceRepo = $courceRepository;
+        $this->assignamnetRepo = $assignamnetRepository;
+        $this->studentRepo = $studentRepository;
+        $this->subjectRepo = $subjectRepository;
+    }
     public function index(){
-        $streams = Stream::get();
+        $streams = Cource::get();
         return view('admin.students', ['streams' => $streams]);
     }
     public function store(Request $request){
@@ -22,40 +38,10 @@ class StudentController extends Controller
             'stream' => 'required',
         ]);
         try{
-            if ($request->file('file')) {
-                $file = $request->file('file');
-                $path = $file->store('uploads/csv', 'public');
-                
-                $data = array_map('str_getcsv', file(storage_path('app/public/uploads/csv/' . basename($path))));
-                $header = $data[0];
-                unset($data[0]);
-                $records = [];
-
-                foreach ($data as $row) {
-                    $records[] = [
-                        'en_no' => $row[0],
-                        'name' => $row[1],
-                        'email' => $row[2],
-                        'stream_id' => $row[3],
-                        'sem' => $row[4],
-                        'ip' => $row[5],
-                    ];
-                }
-
-                DB::beginTransaction();
-                Student::insert($records);
-                DB::commit();
-
-                return redirect()->route('students')->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->route('students')->with('error', 'No file uploaded');
-            }
+            $this->studentRepo->store($request);
+            return redirect()->route('students')->with('success', 'File uploaded successfully!');
         }catch(Exception $e){
-            DB::rollBack();
-            return response()->json([
-               'message' => 'Error saving data',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('students')->with('error', 'Error saving data: ' . $e->getMessage());
         }
         // return view('admin.students');
     }

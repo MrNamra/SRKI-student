@@ -10,9 +10,15 @@ class Subject extends Model
     use HasFactory;
     protected $table = 'subjects';
 
-    protected $fillebal = [
+    protected $fillable = [
         'subject_code',
         'cource_id',
         'name',
+        'sem',
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Cource::class, 'cource_id');
+    }
 }

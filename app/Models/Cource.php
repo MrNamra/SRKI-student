@@ -11,7 +11,7 @@ class Cource extends Model
 
     protected $table = 'courses';
 
-    protected $fillebal = [
+    protected $fillable = [
         'name',
         'no_of_sem',
     ];

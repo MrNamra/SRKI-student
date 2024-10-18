@@ -26,11 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::get('assignments', [AssginamnetController::class, 'index'])->name('assignments');
     Route::get('students', [StudentController::class, 'index'])->name('students');
     Route::post('students', [StudentController::class, 'store'])->name('add-students');
-    Route::get('stream', [CourceController::class, 'index'])->name('stream');
+    Route::get('courses', [CourceController::class, 'index'])->name('course');
     Route::get('getsubjects', [CourceController::class, 'getSubjects'])->name('getSubjects');
     Route::get('getsubject', [CourceController::class, 'getSubject'])->name('getSubject');
     Route::delete('subject', [CourceController::class, 'deleteSubject'])->name('delete-subject');
-    Route::post('stream', [CourceController::class, 'addstream'])->name('add-stream');
+    Route::post('courses', [CourceController::class, 'addcourse'])->name('add-course');
     Route::post('addSub', [CourceController::class, 'addSubject'])->name('add-subject');
     Route::post('students', [StudentController::class, 'store'])->name('add-students');
 });

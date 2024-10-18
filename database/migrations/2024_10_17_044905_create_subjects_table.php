@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subjects', function (Blueprint $table) {
-            $table->string('subject_code')->primary();
+            $table->id();
+            $table->string('subject_code');
             $table->foreignId('cource_id')->refrences('id')->on('cources');
             $table->string('name');
             $table->tinyInteger('sem');

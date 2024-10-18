@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use App\AssginamnetRepositoryInterface;
+use App\Interface\AssignmentRepositoryInterface;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
 /**
  * Class AssginamnetRepository.
  */
-class AssginamnetRepository extends BaseRepository implements AssginamnetRepositoryInterface
+class AssginamnetRepository extends BaseRepository implements AssignmentRepositoryInterface
 {
     /**
      * @return string

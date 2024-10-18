@@ -146,7 +146,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('stream')}}" class="nav-link {{Request::is('stream')?"active": ''}}">
+                            <a href="{{route('course')}}" class="nav-link {{Request::is('course')?"active": ''}}">
                                 <i class="nav-icon fas fa-book-open"></i>
                                 <p>
                                     Add Strem/Sunbect

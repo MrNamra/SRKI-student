@@ -6,14 +6,15 @@
             <!-- Small boxes (Stat box) -->
             <div class="row mt-2">
                 <div class="col-12">
-                    <form method="POST" id="add-steam">
+                    <form method="POST" id="add-course">
                         @csrf
                         <div class="card card-default" style="padding: 20px;">
-                            <label>Add Stream</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="stream" placeholder="BScIT" />
+                            <label>Add Courses</label>
+                            <div class="input-group mb-3 col-12">
+                                <input type="text" class="form-control col-10" name="name" placeholder="BScIT" />
+                                <input type="number" class="form-control col-2" min="1" max="10" name="no_of_sem" placeholder="Total Sem Of This Course" />
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit"><i class="fas fa-chart-bar"></i> Add Stream</button>
+                                    <br><button class="btn btn-primary" type="submit"><i class="fas fa-chart-bar"></i> Add Courses</button>
                                 </div>
                             </div>
                         </div>
@@ -24,22 +25,23 @@
                         <form method="POST" id="add-subject">
                           @csrf
                             <label for="stream">Select Stream</label>
-                            <select id="stream" class="form-control select2" multiple="multiple" name="stream[]" data-placeholder="Select a Stream">
-                              @foreach ($streams as $stream)
-                                <option value="{{$stream->id}}">{{$stream->stream}}</option>
-                              @endforeach
+                            <select id="stream" class="form-control select2" name="cource_id[]" data-placeholder="Select a Cource">
+                              @if ($streams)
+                                @foreach ($streams as $stream)
+                                  <option value="{{$stream->id}}">{{$stream->name}}</option>
+                                @endforeach
+                              @endif
                             </select>
-                            <label for="sem">Select Sem</label>
+                            <label for="sem">Select Subject For Sem</label>
                             <select id="sem" class="form-control" name="sem">
-                                <option value="1">1st</option>
-                                <option value="2">2nd</option>
-                                <option value="3">3rd</option>
-                                <option value="4">4th</option>
-                                <option value="5">5th</option>
-                                <option value="6">6th</option>
+                              @for ($i=1; $i <= 8; $i++)
+                                <option value="{{$i}}">{{$i}}</option>
+                              @endfor
                             </select>
                             <label for="Subject">Add Subject</label>
-                            <input type="text" id="Subject" class="form-control" name="subject" placeholder="Subject" />
+                            <input type="text" id="Subject" class="form-control" name="name" placeholder="Subject" />
+                            <label for="Subject">Subject code</label>
+                            <input type="text" id="Subject-code" class="form-control" name="subject_code" placeholder="Subject Code" />
                             <button class="btn btn-success mt-2" type="submit"><i class="fas fa-book"></i> Add Subject</button>
                         </form>
                     </div>
@@ -98,9 +100,11 @@
               <input type="hidden" name="id" placeholder="Name" />
               <label class="control-label">Stream</label>
               <select class="form-control select2" name="stream[]" data-placeholder="Select a Stream">
-                @foreach ($streams as $stream)
+                @if ($streams)
+                  @foreach ($streams as $stream)
                   <option value="{{$stream->id}}">{{$stream->stream}}</option>
-                @endforeach
+                  @endforeach
+                @endif
               </select>
               <label class="control-label">Sem</label>
               <select class="form-control" name="sem">
@@ -215,7 +219,7 @@
             { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'">edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'">Delete</button>'; } } // Action column
         ]
     });
-    $('#add-steam').on('submit', function(e) {
+    $('#add-course').on('submit', function(e) {
         e.preventDefault();
         Toast.fire({
           icon: 'info',
@@ -223,7 +227,7 @@
         })
         var formData = new FormData(this);
         $.ajax({
-          url: '{{ route('add-stream') }}',
+          url: "{{ route('add-course') }}",
           processData: false,
           contentType: false,
           method: 'POST',
