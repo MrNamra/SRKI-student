@@ -38,34 +38,36 @@ class CourceController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = Subject::with('course'); // Eager load the stream relationship
+        $query = Subject::with('course');
 
-        // Apply search filter if search value exists
         if ($searchValue) {
-            $query->where('name', 'LIKE', "%{$searchValue}%");
+            $query->where('name', 'LIKE', "%{$searchValue}%")
+                ->orWhere('sem', 'LIKE', "%{$searchValue}%")
+                ->orWhere('subject_code', 'LIKE', "%{$searchValue}%")
+                ->orWhereHas('course', function($q) use ($searchValue) {
+                    $q->where('name', 'LIKE', "%{$searchValue}%");
+                });
         }
 
-        // Total records without filtering
         $totalRecords = $query->count();
 
-        // Pagination
         $perPage = $request->input('length', 10); // Default to 10 if not specified
         $currentPage = $request->input('start', 0) / $perPage + 1; // Calculate current page
         $subjects = $query->paginate($perPage, ['*'], 'page', $currentPage);
 
-        // Prepare the response
         return response()->json([
             'draw' => intval($request->input('draw')), // Send back the draw parameter
             'recordsTotal' => $totalRecords, // Total records before filtering
             'recordsFiltered' => $totalRecords, // Total records after filtering (can be the same if no filtering)
             'data' => collect($subjects->items())->map(function($subject) {
                 return [
-                    // 'id' => $subject->id,
+                    'id' => $subject->id,
+                    'subject_code' => $subject->subject_code, // Fetch stream name
+                    'cource_name' => $subject->course->name,
                     'name' => $subject->name,
                     'sem' => $subject->sem,
-                    'subject_code' => $subject->subject_code ? $subject->subject_code : 'N/A', // Fetch stream name
                 ];
-            }), // The actual data with stream name included
+            }),
         ]);
     }
     public function addcourse(Request $request){
@@ -100,7 +102,7 @@ class CourceController extends Controller
                 'name' => 'required',
                 'subject_code' => 'required',
             ]);
-            $this->subjectRepo->createOrUpdate($request->except('_token'));
+            $this->subjectRepo->createOrUpdate($request->except(['_token', 'id']), $request->input('id'));
             return response()->json(['status' => 'success', 'message' => 'Subjects added successfully!']);
         }catch(Exception $e){
             return response()->json(['status' => 'fail', 'message' => 'Failed to add subjects: ' . $e->getMessage()], 500);

@@ -16,6 +16,12 @@ class Student extends Model
         'ip',
         'name',
         'course_id',
+        'sem',
         'div',
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Cource::class, 'course_id');
+    }
 }

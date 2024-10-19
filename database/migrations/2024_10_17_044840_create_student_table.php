@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('ip');
             $table->string('name');
             $table->foreignId('course_id')->refrences('id')->on('courses');
+            $table->integer('sem');
             $table->string('div');
             $table->timestamps();
         });

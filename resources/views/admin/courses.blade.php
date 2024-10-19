@@ -25,7 +25,7 @@
                         <form method="POST" id="add-subject">
                           @csrf
                             <label for="stream">Select Stream</label>
-                            <select id="stream" class="form-control select2" name="cource_id[]" data-placeholder="Select a Cource">
+                            <select id="stream" class="form-control select2" name="cource_id" data-placeholder="Select a Cource">
                               @if ($streams)
                                 @foreach ($streams as $stream)
                                   <option value="{{$stream->id}}">{{$stream->name}}</option>
@@ -53,8 +53,9 @@
                   <thead>
                       <tr class="thead-dark">
                           <th scope="col">#</th>
-                          <th scope="col">Student Name</th>
-                          <th scope="col">Year</th>
+                          <th scope="col">Cource code</th>
+                          <th scope="col">Cource Name</th>
+                          <th scope="col">Sem</th>
                           <th scope="col">Sub. Name</th>
                           <th scope="col"><i class="fas fa-cogs"></i></th>
                       </tr>
@@ -89,7 +90,7 @@
               <i class="fas fa-2x fa-sync fa-spin"></i>
           </div>
           <div class="modal-header">
-            <h4 class="modal-title">Default Modal</h4>
+            <h4 class="modal-title">Edit Modal</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -98,25 +99,24 @@
             <div class="modal-body">
               @csrf
               <input type="hidden" name="id" placeholder="Name" />
-              <label class="control-label">Stream</label>
-              <select class="form-control select2" name="stream[]" data-placeholder="Select a Stream">
+              <label class="control-label">Cource</label>
+              <select class="form-control select2" name="cource_id" data-placeholder="Select a Corce">
                 @if ($streams)
                   @foreach ($streams as $stream)
-                  <option value="{{$stream->id}}">{{$stream->stream}}</option>
+                  <option value="{{$stream->id}}">{{$stream->name}}</option>
                   @endforeach
                 @endif
               </select>
               <label class="control-label">Sem</label>
               <select class="form-control" name="sem">
-                <option value="1">1st</option>
-                <option value="2">2nd</option>
-                <option value="3">3rd</option>
-                <option value="4">4th</option>
-                <option value="5">5th</option>
-                <option value="6">6th</option>
+                @for ($i = 1; $i <= 8; $i++)
+                  <option value="{{$i}}">{{$i}}</option>
+                @endfor
               </select>
               <label class="control-label">Sub. Name</label>
-              <input type="text" name="subject" class="form-control" placeholder="Name" />
+              <input type="text" name="name" class="form-control" placeholder="Name" />
+              <label class="control-label">Sub. Code</label>
+              <input type="text" name="subject_code" class="form-control" placeholder="Subject Code" />
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -185,7 +185,8 @@
           $('.overlay').hide();
           $('#edit-from').find('[name="id"]').val(res.id);
           $('#edit-from').find('[name="subject"]').val(res.name);
-          $('#edit-from').find('[name="year"]').val(res.year);
+          $('#edit-from').find('[name="sem"]').val(res.sem);
+          $('#edit-from').find('[name="subject_code"]').val(res.subject_code);
           $('#edit-subject-form').modal('show');
         },
         error: function(err) {
@@ -213,8 +214,9 @@
         },
         columns: [
             { data: null, render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Index column
-            { data: 'name' },
-            { data: 'year', render: function(data) { return (data == 1) ? 'FY' : (data == 2) ? 'SY' : 'TY'; } },
+            { data: 'subject_code' },
+            { data: 'cource_name' },
+            { data: 'sem' },
             { data: 'name' },
             { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'">edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'">Delete</button>'; } } // Action column
         ]

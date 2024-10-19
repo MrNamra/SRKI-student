@@ -34,12 +34,12 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
 
             foreach ($data as $row) {
                 $records[] = [
-                    'en_no' => $row[0],
-                    'name' => $row[1],
-                    'email' => $row[2],
-                    'stream_id' => $row[3],
-                    'sem' => $row[4],
-                    'ip' => $row[5],
+                    'enrollment_no' => $row[0],
+                    'ip' => $row[1],
+                    'name' => $row[2],
+                    'div' => $row[3],
+                    'course_id' => $request->cource_id,
+                    'sem' => $request->sem,
                 ];
             }
 
@@ -54,5 +54,71 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         } else {
             throw new Exception('No file uploaded');
         }
+    }
+    public function getSudentsList($request) {
+        $searchValue = $request->input('search.value');
+    
+        // Query with relationships
+        $query = Student::with('course');
+    
+        // Apply search filter
+        if ($searchValue) {
+            $query->where(function($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('sem', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('ip', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('div', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('enrollment_no', 'LIKE', "%{$searchValue}%")
+                    ->orWhereHas('course', function($q) use ($searchValue) {
+                        $q->where('name', 'LIKE', "%{$searchValue}%");
+                    });
+            });
+        }
+    
+        // Total records before filtering
+        $totalRecords = Student::count();
+    
+        // Total records after filtering
+        $filteredRecords = $query->count();
+    
+        // Pagination parameters
+        $perPage = $request->input('length', 10); // Default to 10
+        $currentPage = ($request->input('start', 0) / $perPage) + 1;
+    
+        // Get paginated data
+        $students = $query->paginate($perPage, ['*'], 'page', $currentPage);
+    
+        // Prepare response data directly
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => collect($students->items())->map(function($student) {
+                return [
+                    'enrollment_no' => $student->enrollment_no,
+                    'ip' => $student->ip,
+                    'name' => $student->name,
+                    'course_name' => $student->course->name,
+                    'sem' => $student->sem,
+                    'div' => $student->div,
+                ];
+            }),
+        ]);
+    }
+    public function getSudentById($id){
+        return Student::where('enrollment_no', $id)->first();
+    }
+    public function deleteSudentById($id){
+        return Student::where('enrollment_no', $id)->delete();
+    }
+    public function updateSudentById($request) {
+        // return Student::where('enrollment_no', $request->enrollment_no)->update([
+        //     'ip' => $request->ip,
+        //     'name' => $request->name,
+        //     'div' => $request->div,
+        //     'sem' => $request->sem,
+        //     'course_id' => $request->cource_id,
+        // ]);
+        return Student::where('enrollment_no', $request->enrollment_no)->update($request->except(['enrollment_no', '_token']));
     }
 }

@@ -26,6 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::get('assignments', [AssginamnetController::class, 'index'])->name('assignments');
     Route::get('students', [StudentController::class, 'index'])->name('students');
     Route::post('students', [StudentController::class, 'store'])->name('add-students');
+    Route::get('getSudentsList', [StudentController::class, 'getSudentsList'])->name('get-students-list');
+    Route::get('getSutudent', [StudentController::class, 'getSudentById'])->name('getSutudent');
+    Route::delete('deleteSutudent', [StudentController::class, 'deleteSudentById'])->name('delete-student');
+    Route::post('updateSutudent', [StudentController::class, 'updateSudentById'])->name('update-student');
     Route::get('courses', [CourceController::class, 'index'])->name('course');
     Route::get('getsubjects', [CourceController::class, 'getSubjects'])->name('getSubjects');
     Route::get('getsubject', [CourceController::class, 'getSubject'])->name('getSubject');
