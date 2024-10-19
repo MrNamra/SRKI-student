@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::get('getSutudent', [StudentController::class, 'getSudentById'])->name('getSutudent');
     Route::delete('deleteSutudent', [StudentController::class, 'deleteSudentById'])->name('delete-student');
     Route::post('updateSutudent', [StudentController::class, 'updateSudentById'])->name('update-student');
+    Route::post('promotestudents', [StudentController::class, 'promoteSudents'])->name('promote-students');
+    Route::post('demotestudents', [StudentController::class, 'demoteSudents'])->name('demote-students');
     Route::get('courses', [CourceController::class, 'index'])->name('course');
     Route::get('getsubjects', [CourceController::class, 'getSubjects'])->name('getSubjects');
     Route::get('getsubject', [CourceController::class, 'getSubject'])->name('getSubject');

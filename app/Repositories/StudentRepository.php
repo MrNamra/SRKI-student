@@ -13,15 +13,10 @@ use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
  */
 class StudentRepository extends BaseRepository implements StudentRepositoryInterface
 {
-    /**
-     * @return string
-     *  Return the model
-     */
     public function model()
     {
         return Student::class;
     }
-
     public function store($request){
         if ($request->file('file')) {
             $file = $request->file('file');
@@ -112,13 +107,32 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         return Student::where('enrollment_no', $id)->delete();
     }
     public function updateSudentById($request) {
-        // return Student::where('enrollment_no', $request->enrollment_no)->update([
-        //     'ip' => $request->ip,
-        //     'name' => $request->name,
-        //     'div' => $request->div,
-        //     'sem' => $request->sem,
-        //     'course_id' => $request->cource_id,
-        // ]);
         return Student::where('enrollment_no', $request->enrollment_no)->update($request->except(['enrollment_no', '_token']));
+    }
+    public function promoteSudents(){
+        DB::beginTransaction();
+        try {
+            for($i = 8; $i >= 1; $i--){
+                $students = Student::where('sem', $i)->update(['sem' => $i + 1]);
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception('Error saving data: ' . $e->getMessage());
+        }
+    }
+    public function demoteSudents(){
+        DB::beginTransaction();
+        try {
+            for($i = 1; $i <= 8; $i++){
+                $students = Student::where('sem', $i)->update(['sem' => $i - 1]);
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception('Error saving data: ' . $e->getMessage());
+        }
     }
 }

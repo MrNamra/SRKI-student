@@ -87,4 +87,22 @@ class StudentController extends Controller
             return response()->json(['status'=> 'fail', 'message' => 'Error Getting data: ' . $e->getMessage()], 500);
         }
     }
+    public function promoteSudents() {
+        set_time_limit(6000);
+        try {
+            $data = $this->studentRepo->promoteSudents();
+            return response()->json(['status' => 'success', 'message' => 'updated']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error Getting data: ' . $e->getMessage()], 500);
+        }
+    }
+    public function demoteSudents() {
+        set_time_limit(6000);
+        try {
+            $data = $this->studentRepo->demoteSudents();
+            return response()->json(['status' => 'success', 'message' => 'updated']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error Getting data: ' . $e->getMessage()], 500);
+        }
+    }
 }

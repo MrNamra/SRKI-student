@@ -84,6 +84,48 @@
         </table>
     </div>
 </div>
+<hr style="margin: 0 5% 0 5%; background-color: #000;">
+<div class="row justify-content-center">
+    <h3><b>Studens promotion/Demotion</b></h3>
+</div>
+<hr style="margin: 0 5% 5% 5%; background-color: #000;">
+Note:- press any button below this <b>at your own risk</b> beacause after press button data start update and can't be undo
+
+<div class="row mt-5">
+    <!-- /.col -->
+    <div class="col-6">
+      <div class="info-box bg-success promote-demote" data-data="promote">
+        <span class="info-box-icon"><i class="fas fa-chevron-circle-up"></i></span>
+
+        <div class="info-box-content">
+          <span class="info-box-text">Yes I Ready to take Risk</span>
+          <span class="info-box-number">41,410</span>
+          <span class="progress-description">
+            Students are Promoted to +1 sem
+          </span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-6">
+      <div class="info-box bg-danger promote-demote" data-data="demote">
+        <span class="info-box-icon"><i class="fas fa-chevron-circle-down"></i></span>
+
+        <div class="info-box-content">
+          <span class="info-box-text">Yes I Ready to take Risk</span>
+          <span class="info-box-number">41,410</span>
+          <span class="progress-description">
+            Students are Demote to -1 sem
+          </span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+  </div>
 
 <div class="modal fade" id="editModal">
     <div class="modal-dialog">
@@ -309,6 +351,36 @@
                         })
                     }
                 })
+            })
+            $('.promote-demote').on('click', function(){
+                var userConfirmed = confirm("Still Are you Ready to take Risk? \n for Yes Press 'OK' \n for No press 'Cancle'");
+                if (userConfirmed) {
+                    var url = ($(this).data('data')=='promote')? '{{route("promote-students")}}' : '{{route("demote-students")}}';
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: "Promoted Successfully!"
+                            })
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                            console.log(response);
+                        },
+                        error: function(xhr, status, error) {
+                            Toast.fire({
+                                icon: 'error',
+                                title: "Something went wrong!"
+                            })
+                            console.log(error); // Optionally log the error
+                        }
+                    });
+                }
             })
         });
     </script>
