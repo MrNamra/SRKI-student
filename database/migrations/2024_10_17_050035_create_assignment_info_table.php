@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('assignment_info', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('en_no')->refrances('enrollment_no')->on('students');
-            $table->foreignId('assingment_id')->refrances('id')->on('lab_schedules');
+            $table->string('en_no');
+            $table->foreign('en_no')->references('enrollment_no')->on('students')->onDelete('cascade');
+            $table->foreignId('assingment_id')->references('id')->on('lab_schedules')->onDelete('cascade');
             $table->longText('file_path');
             $table->timestamps();
         });

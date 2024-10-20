@@ -5,11 +5,13 @@ use App\Http\Controllers\Admin\LabController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\CourceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::post('/', [StudentsController::class, 'login']);
 
 // Route::get('/dashboard', function () {
 //     return view('admin.dashboard');
@@ -27,7 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('assignments', [AssginamnetController::class, 'index'])->name('assignments');
     Route::get('assignmentslist', [LabController::class, 'list'])->name('getAssignmentList');
     Route::post('assignments', [LabController::class, 'store'])->name('upload-assignment');
-    Route::post('updateassignments', [LabController::class, 'update'])->name('upload-assignment-update');
+    Route::post('updateassignments', [LabController::class, 'update'])->name('update-assignment');
+    Route::delete('deleteassignment', [LabController::class, 'delete'])->name('deleteAssignment');
+    Route::get('editassignment/{id}', [LabController::class, 'getAssignmentByID'])->name('editAssignment');
     Route::get('students', [StudentController::class, 'index'])->name('students');
     Route::post('students', [StudentController::class, 'store'])->name('add-students');
     Route::get('getSudentsList', [StudentController::class, 'getSudentsList'])->name('get-students-list');

@@ -35,7 +35,7 @@
                     <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
                 </div>
                 <div class="col-4">
-                    <select class="form-control select2 col-12" name="cource_id" id="select-course">
+                    <select class="form-control select2 col-12 select-course" name="cource_id" id="select-course">
                         <option selected disabled>Select Course</option>
                         @foreach ($cources as $cource)
                         <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
@@ -43,12 +43,12 @@
                     </select>
                 </div>
                 <div class="col-4">
-                    <select class="form-control select2 select2-sem col-12" name="sem" id="select-sem">
+                    <select class="form-control select2 select2-sem col-12 select-sem" name="sem" id="select-sem">
                         <option selected disabled>Select Semester</option>
                     </select>
                 </div>
                 <div class="col-2">
-                    <select class="form-control select2 col-12" name="sub_id" id="select-sub">
+                    <select class="form-control select2 col-12 select-sub" name="sub_id" id="select-sub">
                         <option selected disabled>Subject</option>
                     </select>
                 </div>
@@ -71,12 +71,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
-                            <input type="text" class="form-control float-right" name="date" id="reservationtime">
+                            <input type="text" class="form-control float-right reservationtime" name="date" id="reservationtime">
                         </div>
                         <!-- /.input group -->
                     </div>
                     <label>Decription of Assignment:</label>
-                    <textarea id="summernote" name="dec"></textarea>
+                    <textarea id="summernote" class="summernote" name="dec"></textarea>
                 </div>
             </div>
             <div class="col-11 mt-3 mb-2" style="margin: 0 5% 0 5%;">
@@ -174,7 +174,7 @@
                         #
                     </th>
                     <th >
-                        Project Name
+                        Title
                     </th>
                     <th >
                         Subject
@@ -263,6 +263,94 @@
     <!-- /.card -->
 
 </section>
+
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="overlay">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+        </div>
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Modal</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form class="update-form" enctype="multipart/form-data" method="post">
+            @csrf
+            <input type="hidden" name="id" value="">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-header">
+                            <h3 class="card-title">Drag & Drop <small><em>Assignment to upload</em></small></h3>
+                        </div>
+                        <input name="file" type="file" class="form-control col-11 ml-2" />
+                        <small class="ml-2">don't upload if u don't want change file</small>
+                    </div>
+                </div>
+                <!-- /.card -->
+                <div class="row col-11 mt-3 ml-3">
+                    <div class="col-12 mb-3">
+                        <label>Assignment Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control select2 col-12 select-course" name="cource_id" >
+                            <option selected disabled>Select Course</option>
+                            @foreach ($cources as $cource)
+                                <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control select2 select2-sem col-12 select-sem" name="sem">
+                            <option selected disabled>Select Semester</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <select class="form-control select2 col-12 select-sub" name="sub_id" >
+                            <option selected disabled>Subject</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <select class="form-control select2 col-12" name="div">
+                            <option selected disabled>Division</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                            <option>E</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row col-11 mt-3 ml-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Start & End Date and time range:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                                <input type="text" class="form-control float-right reservationtime" name="date">
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+                        <label>Decription of Assignment:</label>
+                        <textarea class="summernote1" name="dec"></textarea>
+                    </div>
+                </div>
+                <div class="col-11 mt-3 mb-2" style="margin: 0 5% 0 5%;">
+                    <input type="submit" class="btn btn-primary col-12" value="Update"></input>
+                </div>
+            </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 @endsection
 @section('js')
 <!-- date-range-picker -->
@@ -273,15 +361,16 @@
 <script src="{{url('/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <script>
     $(document).ready(function() {
+        $('.upload-form')[0].reset();
         // Summernote
-        $('#summernote').summernote()
+        $('.summernote').summernote()
         Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000
         })
-        $('#reservationtime').daterangepicker({
+        $('.reservationtime').daterangepicker({
             timePicker: true,
             timePickerIncrement: 10,
             locale: {
@@ -309,61 +398,57 @@
                 { data: 'submission_percentage' },
                 { data: 'time' },
                 { data: 'status' },
-                { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'">edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'">Delete</button>'; } } // Action column
+                { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'"><i class="fas fa-pencil-alt"></i> edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'"><i class="fas fa-trash"></i> Delete</button><button class="btn btn-sm btn-primary view-data" data-id="'+data.id+'"><i class="fas fa-folder"></i> View</button>'; } } // Action column
             ]
         });
 
-        $('#select-course').on('change', function() {
-            // Get the selected course's data-sem attribute
+        $(document).on('change', '.select-course', function() {
             const selectedSem = $(this).find(':selected').attr('data-sem');
-            const semesterDropdown = $('#select-sem').first();
+            const semesterDropdown = $(this).closest('.row').find('.select-sem');
 
-            // Clear the semester dropdown and add a default option
+            // Clear and populate semester dropdown
             semesterDropdown.empty().append('<option selected disabled>Select Semester</option>');
-
-            // If a valid semester count is present, populate the dropdown
             if (selectedSem) {
                 for (let i = 1; i <= selectedSem; i++) {
                     semesterDropdown.append(`<option value="${i}">Sem${i}</option>`);
                 }
             }
         });
-        $("#select-sem").on('change', function() {
-            var sem = $(this).val();
+        $(document).on('change', '.select-sem', function() {
+            const sem = $(this).val();
+            const courseDropdown = $(this).closest('.row').find('.select-course');
+            const subjectDropdown = $(this).closest('.row').find('.select-sub');
+
+            // AJAX request to get subjects based on selected semester and course
             $.ajax({
                 url: '{{ route("getSubject") }}',
                 type: 'GET',
                 data: {
                     sem: sem,
-                    cource_id: $('#select-course').val(),
+                    cource_id: courseDropdown.val(),
                 },
                 success: function(response) {
-                    $("#select-sub").empty();
-                    var html = '<option selected disabled>Subject</option>';
-                    if(response.length > 0){
+                    subjectDropdown.empty().append('<option selected disabled>Subject</option>');
+                    if (response.length > 0) {
                         response.forEach((element) => {
-                            html += `<option value="${element.id}">${element.name}</option>`;
-                        })
-                    }else{
+                            subjectDropdown.append(`<option value="${element.id}">${element.name}</option>`);
+                        });
+                    } else {
                         Toast.fire({
                             icon: 'info',
                             title: "No Subject Found!"
-                        })
+                        });
                     }
-                    $("#select-sub").append(html);
-                    // $('#select-sub').select2({
-                    //     theme: 'bootstrap4'
-                    // });
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
                     Toast.fire({
                         icon: 'error',
-                        title: "Error in Fetching Data!"
-                    })
+                        title: "Error fetching subjects!"
+                    });
                 }
             });
-        })
+        });
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const fileList = document.getElementById('file-list');
@@ -409,7 +494,6 @@
             fileInput.value = ''; // Clear the file input
             fileList.innerHTML = '<p class="text-muted">Drag & Drop file here or click to select a file</p>';
         }
-        
         $('.upload-form').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
@@ -462,6 +546,131 @@
                     }
                 }
             })
+        });
+
+        $('.projects').on('click', '.delete-data', function(){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var id = $(this).data('id');
+                    $.ajax({
+                        url: '{{ route("deleteAssignment") }}',
+                        method: 'DELETE',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: id
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if(response.status){
+                                Toast.fire({
+                                    icon:'success',
+                                    title: "Deleted Successfully!"
+                                })
+                            } else{
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: "Deleting data fail!"
+                                })
+                            }
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        },
+                        error: function(err) {
+                            console.log(err);
+                            Toast.fire({
+                                icon: 'error',
+                                title: err.responseJSON.message
+                            })
+                        }
+                    });
+                }
+            })
+        })
+
+        $(document).on('click', '.edit-data', function() {
+            var id = $(this).data('id');
+            $('.overlay').show(); // Show overlay
+            $('#editModal').modal('show');
+
+            // AJAX request to get the assignment data
+            $.ajax({
+                url: '{{ route("editAssignment", '') }}/' + id,
+                method: 'GET',
+                success: function(response) {
+                    // Reset form and populate with fetched data
+                    $('.update-form').trigger('reset');
+                    console.log(response);
+                    $('.update-form input[name="id"]').val(response.id);
+                    $('.update-form').attr('action', '{{ url("updateAssignment") }}/' + id);
+                    $('.update-form input[name="title"]').val(response.title);
+                    $(".summernote1").summernote("code", response.dec); // Populate summernote
+                    $('.update-form input[name="date"]').val(response.date);
+
+                    // Update course, semester, and subject dropdowns
+                    $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
+                    $('.update-form select[name="sem"]').val(response.sem).trigger('change');
+                    $('.update-form select[name="div"]').val(response.div).trigger('change');
+                    setTimeout(function() {
+                        $('.update-form select[name="sub_id"]').val(response.sub_id).trigger('change');
+                    }, 1000);
+                    // $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
+
+                    // Hide overlay after data is populated
+                    $('.overlay').hide();
+                },
+                error: function(err) {
+                    console.log(err);
+                    $('.overlay').hide();
+                    Toast.fire({
+                        icon: 'error',
+                        title: err.responseJSON.message || "Error fetching data"
+                    });
+                }
+            });
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            $.ajax({
+                url: '{{ route("update-assignment") }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                    if(response.status){
+                        Toast.fire({
+                            icon: 'success',
+                            title: "Updated Successfully!"
+                        })
+                    } else{
+                        Toast.fire({
+                            icon: 'error',
+                            title: "Updating data fail!"
+                        })
+                    }
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function(err) {
+                    console.log(err);
+                    Toast.fire({
+                        icon: 'error',
+                        title: err.responseJSON.message
+                    })
+                }
+            });
         });
     });
 
