@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cource;
 use App\Repositories\AssginamnetRepository;
 use App\Repositories\CourceRepository;
 use App\Repositories\StudentRepository;
@@ -11,18 +12,31 @@ use Illuminate\Http\Request;
 
 class AssginamnetController extends Controller
 {
-    // private $courceRepo, $assignamnetRepo, $studentRepo;
-    // public function __construct(CourceRepository $cource, AssginamnetRepository $assignment, StudentRepository $student)
+    // private $assignamnetRepo;
+    // public function __construct(AssginamnetRepository $assignment)
     // {
-    //     $this->courceRepo = $cource;
     //     $this->assignamnetRepo = $assignment;
-    //     $this->studentRepo = $student;
     // }
     public function index(){
         try{
-            return view('admin.assignment');
+            $cources = Cource::get();
+            return view('admin.assignment', ['cources' => $cources]);
         }catch(Exception $ex){
             dd($ex);
         }
     }
+    // public function store(Request $request){
+    //     $request->validate([
+    //         'file' => 'required',
+    //         'cource_id' => 'required|numeric',
+    //         'sem' => 'required|numeric',
+    //         'subject_id' => 'required|numeric',
+    //     ]);
+    //     try{
+    //         // $this->assignamnetRepo->store($request);
+    //         return redirect()->back();
+    //     }catch(Exception $ex){
+    //         dd($ex);
+    //     }
+    // }
 }
