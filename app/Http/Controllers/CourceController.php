@@ -29,8 +29,11 @@ class CourceController extends Controller
     public function getSubject(Request $request)
     {
         $id = $request->id;
-        $res = Subject::find($id);
-
+        if($id){
+            $res = Subject::find($id);
+        }else{
+            $res = Subject::where('cource_id', $request->cource_id)->where('sem', $request->sem)->get();
+        }
         // Prepare the response
         return response()->json($res);
     }

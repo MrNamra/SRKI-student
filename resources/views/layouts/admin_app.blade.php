@@ -35,6 +35,8 @@
     <link rel="stylesheet" href="{{url('/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <!-- DataTable -->
     <link rel="stylesheet" href="{{url('/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{url('plugins/summernote/summernote-bs4.min.css') }}">
 </head>
 
 <body class="hold-transition sidebar-mini">

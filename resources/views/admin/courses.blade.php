@@ -205,6 +205,7 @@
     });
     $('#dataTable').DataTable({
         serverSide: true,
+        ordering: false,
         "lengthChange": false,
         "autoWidth": true,
         "responsive": true,

@@ -10,11 +10,21 @@ class LabSchedule extends Model
     use HasFactory;
     protected $table = 'lab_schedules';
 
-    protected $fillebal = [
+    protected $fillable = [
+        'id',
         'sub_id',
         'div',
-        'date',
+        'title',
+        'dec',
+        'file_path',
         'StartTime',
         'EndTime'
     ];
+
+    public function subject() {
+        return $this->belongsTo(Subject::class, 'sub_id');        
+    }
+    public function assignment() {
+        return $this->belongsTo(AssignmentInfo::class, 'assingment_id');        
+    }
 }

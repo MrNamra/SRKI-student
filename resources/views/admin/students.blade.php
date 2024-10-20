@@ -222,6 +222,7 @@ Note:- press any button below this <b>at your own risk</b> beacause after press 
                 serverSide: true,
                 lengthChange: false,
                 autoWidth: true,
+                ordering: false,
                 responsive: true,
                 ajax: {
                     url: '{{ route("get-students-list") }}',

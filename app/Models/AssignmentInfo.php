@@ -14,4 +14,8 @@ class AssignmentInfo extends Model
         'en_no',
         'assingment_id',
     ];
+
+    public function students(){
+        return $this->hasMany(Student::class, 'enrollment_no', 'en_no');
+    }
 }

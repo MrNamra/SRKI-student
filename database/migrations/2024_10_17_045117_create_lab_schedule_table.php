@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('lab_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sub_id')->refrences('subject_code')->on('subjects');
+            $table->foreignId('sub_id')->references('id')->on('subjects');
             $table->string('div');
-            $table->date('date');
             $table->dateTime('StartTime');
             $table->dateTime('EndTime');
             $table->timestamps();

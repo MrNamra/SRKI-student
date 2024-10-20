@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interface\AssignmentRepositoryInterface;
+use App\Models\AssignmentInfo;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
@@ -17,6 +18,6 @@ class AssginamnetRepository extends BaseRepository implements AssignmentReposito
      */
     public function model()
     {
-        //return YourModel::class;
+        return AssignmentInfo::class;
     }
 }
