@@ -184,7 +184,7 @@
           console.log(res);
           $('.overlay').hide();
           $('#edit-from').find('[name="id"]').val(res.id);
-          $('#edit-from').find('[name="subject"]').val(res.name);
+          $('#edit-from').find('[name="name"]').val(res.name);
           $('#edit-from').find('[name="sem"]').val(res.sem);
           $('#edit-from').find('[name="subject_code"]').val(res.subject_code);
           $('#edit-subject-form').modal('show');

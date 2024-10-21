@@ -109,4 +109,12 @@ class LabController extends Controller
             return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
         }
     }
+    public function projectSubmissions(Request $request){
+        try {
+            $data = $this->labRepo->projectSubmissions($request, $request->id);
+            return response()->json($data->original);
+        } catch (Exception $ex) {
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
+    }
 }

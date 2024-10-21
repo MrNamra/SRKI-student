@@ -132,4 +132,55 @@ class LabRepository extends BaseRepository implements LabRepositoryInterface
             'date' => date('m/d/Y h:i A', strtotime($data->StartTime)).' - '.date('m/d/Y h:i A', strtotime($data->EndTime)),
         ];
     }
+    public function projectSubmissions($request, $id)
+    {
+        $data = LabSchedule::with('assignment', 'subject')->find($id);
+        if (!$data) {
+            return response()->json(['error' => 'Lab schedule not found'], 404);
+        }
+
+        // Fetch submitted assignments
+        $submittedAssignments = AssignmentInfo::where('assingment_id', $data->id)->get();
+
+        // Build the query for all students
+        $query = Student::where('div', $data->div)
+                        ->where('sem', $data->subject->sem);
+
+        // Apply search filter if present
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $query->where(function ($query) use ($searchValue) {
+                $query->where('name', 'like', "%{$searchValue}%")
+                    ->orWhere('enrollment_no', 'like', "%{$searchValue}%");
+            });
+        }
+
+        // Get total records before applying pagination
+        $totalRecords = $query->count();
+
+        // Apply pagination
+        $start = $request->start ?? 0;
+        $length = $request->length ?? 10;
+        $students = $query->skip($start)->take($length)->get();
+
+        // Prepare student details
+        $studentDetails = $students->map(function ($student) use ($submittedAssignments) {
+            $assignmentInfo = $submittedAssignments->firstWhere('en_no', $student->enrollment_no);
+            
+            return [
+                'en_no' => $student->enrollment_no,
+                'name' => $student->name,
+                'created_at' => $assignmentInfo ? $assignmentInfo->created_at->format('d-m-Y h:i A') : "N/A",
+                'submitted' => $assignmentInfo ? '<span class="badge badge-success">done</span>' : '<span class="badge badge-warning">pending</span>',
+            ];
+        })->toArray();
+
+        // Return response with filtered data
+        return response()->json([
+            'draw' => intval($request->draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $studentDetails,
+        ]);
+    }
 }

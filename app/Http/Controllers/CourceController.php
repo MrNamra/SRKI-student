@@ -65,7 +65,7 @@ class CourceController extends Controller
             'data' => collect($subjects->items())->map(function($subject) {
                 return [
                     'id' => $subject->id,
-                    'subject_code' => $subject->subject_code, // Fetch stream name
+                    'subject_code' => $subject->name ." (".$subject->subject_code.")", // Fetch stream name
                     'cource_name' => $subject->course->name,
                     'name' => $subject->name,
                     'sem' => $subject->sem,

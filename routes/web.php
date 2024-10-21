@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AssginamnetController;
 use App\Http\Controllers\Admin\LabController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\CourceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
@@ -23,11 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('assignments', [AssginamnetController::class, 'index'])->name('assignments');
     Route::get('assignmentslist', [LabController::class, 'list'])->name('getAssignmentList');
+    Route::get('getProjectSubmissions', [LabController::class, 'projectSubmissions'])->name('getProjectSubmissions');
     Route::post('assignments', [LabController::class, 'store'])->name('upload-assignment');
     Route::post('updateassignments', [LabController::class, 'update'])->name('update-assignment');
     Route::delete('deleteassignment', [LabController::class, 'delete'])->name('deleteAssignment');
