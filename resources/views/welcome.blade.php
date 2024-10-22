@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('main')
-    <section class="content-header d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <section class="content-header d-flex align-items-center justify-content-center" style="min-height: 90vh;">
         <!-- Horizontal Form -->
-        <div class="card card-info w-50">
+        {{-- <div class="card card-info w-50">
             <div class="card-header text-center">
                 <h3 class="card-title">Login</h3>
             </div>
@@ -25,7 +25,45 @@
                 </div>
                 <!-- /.card-footer -->
             </form>
-        </div>
+        </div> --}}
+        <div class="lockscreen-wrapper">
+        <center>Welcome to</center>
+            <div class="lockscreen-logo">
+              <b>SRKI</b>Student Portal
+            </div>
+            <!-- START LOCK SCREEN ITEM -->
+            <div class="lockscreen-item">
+                <!-- lockscreen image -->
+                <div class="lockscreen-image">
+                    <img src="{{url('/dist/img/man.png')}}" alt="User Image">
+                </div>
+                <!-- /.lockscreen-image -->
+                
+                <!-- lockscreen credentials (contains the form) -->
+                <form id="login" method="post" class="lockscreen-credentials">
+                    @csrf
+                    <div class="input-group">
+                        <input type="text" id="en_no" name="enrollment_no" maxlength="11" class="form-control" placeholder="Enrollment No." >
+                
+                        <div class="input-group-append">
+                            <button type="submit" class="btn">
+                            <i class="fas fa-arrow-right text-muted"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <!-- /.lockscreen credentials -->
+            </div>
+            <!-- /.lockscreen-item -->
+            <div class="help-block text-center">
+              Enter your enrollment number to access dashboard
+            </div>
+            <div class="lockscreen-footer text-center">
+                <strong>Devloped By <a target="_blank" href="https://instagram.com/oye_namu">Namra Ramsha</a>.</strong></b><br> All rights reserved.
+              {{-- Copyright &copy; 2024-2021 <b><a href="https://adminlte.io" class="text-black">AdminLTE.io</a></b><br>
+              All rights reserved --}}
+            </div>
+          </div>
     </section>
 @endsection
 @section('js')
@@ -49,7 +87,7 @@
             else if($("#en_no").val().length != 11){
                 Toast.fire({
                     icon: 'error',
-                    title: "Enrollment No. is not valide!"
+                    title: "Enrollment Number is invalide!"
                 })
             }else{
                 var formData = new FormData(this);

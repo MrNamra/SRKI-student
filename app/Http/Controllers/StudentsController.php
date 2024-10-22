@@ -26,9 +26,9 @@ class StudentsController extends Controller
         ]);
         try{
             $student = $this->studentRepo->login($request->enrollment_no);
-            if($student)
-                return response()->json(['status' => true, 'success' => 'success', 'message' => 'Access Granted!'], 200);
-            return response()->json(['status' => false, 'message' => 'Error While Login!'], 405);
+            if(!empty($student['error']) && $student['error'])
+                return response()->json(['status' => false, 'message' => $student['message']], 405);
+            return response()->json(['status' => true, 'success' => 'success', 'message' => 'Access Granted!'], 200);
         } catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()], 401);
         }     
@@ -39,6 +39,10 @@ class StudentsController extends Controller
         return redirect()->route('student.login');
     }
     public function index(){
+        return view('student.dashboard');
+    }
+    public function submitAssignment(Request $request){
+        dd($request->all());
         return view('student.dashboard');
     }
 }

@@ -16,6 +16,7 @@ Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
 Route::middleware(StudentAuth::class)->prefix('student')->group(function () {
     Route::post('/studentLogout', [StudentsController::class, 'logout'])->name('student.logout');
     Route::get('/dashboard', [StudentsController::class, 'index'])->name('student.dashboard');
+    Route::post('/dashboard', [StudentsController::class, 'submitAssignment'])->name('upload.assignment');
 });
 
 

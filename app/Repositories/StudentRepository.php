@@ -140,19 +140,29 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     }
     public function login($enno) {
         $student = Student::where('enrollment_no', $enno)->first();
-        if (!$student) {
-            return response()->json(['error' => 'fail', 'message' => 'Invalide EmromentID!'], 404);
+        if (empty($student)) {
+            return ['error' => true, 'message' => 'Enrollment Number is invalide!'];
         }
         $ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER))
         ? $_SERVER['HTTP_CLIENT_IP']
         : (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) 
         ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
         if($ip != $student->ip) {
-            return response()->json(['error' => 'fail', 'message' => 'Access Deny!'], 401);
+            return ['error' => true, 'message' => 'Access Deny!'];
         }
-        $lab = Cource::where('sem', $student->sem)->where('div', $student->div)->first();
+        $lab = LabSchedule::join('subjects', 'lab_schedules.sub_id', '=', 'subjects.id')
+                        ->join('students', 'subjects.cource_id', '=', 'students.course_id')
+                        ->where('students.enrollment_no', $enno)
+                        ->where('lab_schedules.div', '=', DB::raw('students.div'))
+                        ->where('lab_schedules.StartTime', '<=', now())
+                        ->where('lab_schedules.EndTime', '>=', now())
+                        ->select('lab_schedules.*', 'subjects.*', 'students.*')
+                        ->first();
+        if(!$lab) {
+            return ['error' => true, 'message' => 'Lab Is Not Schedule!'];
+        }
         Auth::guard('student')->login($student);
-        session()->put('student', $student);
+        session()->put('lab', $lab);
 
         return true;
     }
