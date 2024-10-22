@@ -3,8 +3,11 @@
 namespace App\Repositories;
 
 use App\Interface\StudentRepositoryInterface;
+use App\Models\Cource;
+use App\Models\LabSchedule;
 use App\Models\Student;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 
@@ -134,5 +137,23 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             DB::rollBack();
             throw new Exception('Error saving data: ' . $e->getMessage());
         }
+    }
+    public function login($enno) {
+        $student = Student::where('enrollment_no', $enno)->first();
+        if (!$student) {
+            return response()->json(['error' => 'fail', 'message' => 'Invalide EmromentID!'], 404);
+        }
+        $ip = (array_key_exists('HTTP_CLIENT_IP', $_SERVER))
+        ? $_SERVER['HTTP_CLIENT_IP']
+        : (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) 
+        ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+        if($ip != $student->ip) {
+            return response()->json(['error' => 'fail', 'message' => 'Access Deny!'], 401);
+        }
+        $lab = Cource::where('sem', $student->sem)->where('div', $student->div)->first();
+        Auth::guard('student')->login($student);
+        session()->put('student', $student);
+
+        return true;
     }
 }
