@@ -25,7 +25,7 @@
                         <form method="POST" id="add-subject">
                           @csrf
                             <label for="stream">Select Stream</label>
-                            <select id="stream" class="form-control select2" name="cource_id" data-placeholder="Select a Cource">
+                            <select id="stream" class="form-control select2" name="course_id" data-placeholder="Select a Cource">
                               @if ($streams)
                                 @foreach ($streams as $stream)
                                   <option value="{{$stream->id}}">{{$stream->name}}</option>

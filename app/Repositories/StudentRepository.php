@@ -3,12 +3,14 @@
 namespace App\Repositories;
 
 use App\Interface\StudentRepositoryInterface;
+use App\Models\AssignmentInfo;
 use App\Models\Cource;
 use App\Models\LabSchedule;
 use App\Models\Student;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 
 /**
@@ -21,37 +23,47 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         return Student::class;
     }
     public function store($request){
-        if ($request->file('file')) {
-            $file = $request->file('file');
-            $path = $file->store('uploads/csv', 'public');
-            
-            $data = array_map('str_getcsv', file(storage_path('app/public/uploads/csv/' . basename($path))));
-            $header = $data[0];
-            unset($data[0]);
-            $records = [];
+        DB::beginTransaction();
+        try {
+            if ($request->file('file')) {
+                $file = $request->file('file');
+                $path = $file->store('uploads/csv', 'public');
+                
+                $data = array_map('str_getcsv', file(storage_path('app/public/uploads/csv/' . basename($path))));
+                $header = $data[0];
+                unset($data[0]);
+                $records = [];
 
-            foreach ($data as $row) {
-                $records[] = [
-                    'enrollment_no' => $row[0],
-                    'ip' => $row[1],
-                    'name' => $row[2],
-                    'div' => $row[3],
-                    'course_id' => $request->cource_id,
-                    'sem' => $request->sem,
-                ];
-            }
+                foreach ($data as $row) {
+                    $course_id = Cource::where('name', $row['3'])->first();
+                    if (!$course_id) {
+                        throw new Exception('Invalid course name: '. $row['3']);
+                    }
+                    $records[] = [
+                        'enrollment_no' => $row[0],
+                        'ip' => $row[1],
+                        'name' => $row[2],
+                        'course_id' => $course_id->id,
+                        'sem' => $row[4],
+                        'div' => $row[5],
+                    ];
+                }
 
-            DB::beginTransaction();
-            try {
-                Student::insert($records);
-                DB::commit();
+                    Student::insert($records);
+                    if (Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                    DB::commit();
+                } else {
+                    throw new Exception('No file uploaded');
+                }
             } catch (Exception $e) {
                 DB::rollBack();
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
                 throw new Exception('Error saving data: ' . $e->getMessage());
             }
-        } else {
-            throw new Exception('No file uploaded');
-        }
     }
     public function getSudentsList($request) {
         $searchValue = $request->input('search.value');
@@ -116,7 +128,18 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         DB::beginTransaction();
         try {
             for($i = 8; $i >= 1; $i--){
-                $students = Student::where('sem', $i)->update(['sem' => $i + 1]);
+                $students = Student::with('course')->with('assignment')->where('sem', 1);
+                if($students->get()[0]->course->no_of_sem == $i){
+                    foreach($students->get() as $student){
+                        foreach($student->assignment as $assignment){
+                            if(Storage::exists($assignment->file_path)){
+                                Storage::delete($assignment->file_path);
+                            }
+                        }
+                        $student->delete();
+                    }
+                }
+                $students->update(['sem' => $i + 1]);
             }
             DB::commit();
             return true;
@@ -151,12 +174,12 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             return ['error' => true, 'message' => 'Access Deny!'];
         }
         $lab = LabSchedule::join('subjects', 'lab_schedules.sub_id', '=', 'subjects.id')
-                        ->join('students', 'subjects.cource_id', '=', 'students.course_id')
+                        ->join('students', 'subjects.course_id', '=', 'students.course_id')
                         ->where('students.enrollment_no', $enno)
                         ->where('lab_schedules.div', '=', DB::raw('students.div'))
                         ->where('lab_schedules.StartTime', '<=', now())
                         ->where('lab_schedules.EndTime', '>=', now())
-                        ->select('lab_schedules.*', 'subjects.*', 'students.*')
+                        ->select('lab_schedules.*', 'subjects.*', 'subjects.name AS subject_name', 'students.*')
                         ->first();
         if(!$lab) {
             return ['error' => true, 'message' => 'Lab Is Not Schedule!'];
@@ -165,5 +188,49 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         session()->put('lab', $lab);
 
         return true;
+    }
+    public function submitAssignment($file) {
+        $session = session('lab');
+        $student = Auth::guard('student')->user();
+        $customFileName = $session->title . '.' . $file->getClientOriginalExtension();
+        $course = Cource::find($session->course_id)->name;
+        $path = 'assignments/' . $course . '/' . $session->sem . '/' . $session->div . '/' . $student->enrollment_no . '/' . $session->subject_name;
+
+        // Check if an assignment already exists for this student
+        $assignment = AssignmentInfo::where('assingment_id', $session->id)
+            ->where('en_no', $student->enrollment_no)
+            ->first();
+
+        if ($assignment) {
+            // If the assignment exists, get the old file path and its extension
+            $oldFilePath = $assignment->file_path;
+            $oldFileExtension = pathinfo($oldFilePath, PATHINFO_EXTENSION);
+            $newFileExtension = $file->getClientOriginalExtension();
+
+            // Check if the extensions are the same
+            if ($oldFileExtension === $newFileExtension) {
+                // Overwrite the existing file
+                return $file->storeAs($path, $customFileName, 'public');
+            } else {
+                // If the extension is different, delete the old file
+                if (Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+                }
+
+                // Create a new record and store the new file
+                $assignment->update(['file_path' => $path]);
+                return $file->storeAs($path, $customFileName, 'public');
+            }
+        } else {
+            // If it doesn't exist, create a new record
+            $assignment = new AssignmentInfo();
+            $assignment->en_no = $student->enrollment_no;
+            $assignment->assingment_id = $session->id;
+            $assignment->file_path = $path;
+            $assignment->save();
+
+            // Store the new file
+            return $file->storeAs($path, $customFileName, 'public');
+        }
     }
 }

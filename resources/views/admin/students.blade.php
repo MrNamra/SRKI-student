@@ -2,6 +2,7 @@
 @section('main')
 <div class="row justify-content-center ">
     <form action="" method="post" class="col-md-8" enctype="multipart/form-data">
+        @csrf
         <h4 class="col-6">Add Bulk Students</h4>
         <p>Note:- This Procces take time depend on Student Data <b>Max exec time 1.67hours</b></p>
         <small><a href="{{ url('/csv/Example.csv') }}">Here Example csv file </a></small>
@@ -9,20 +10,6 @@
             <div class="card card-default" style="padding: 20px;">
                 <label for="my-select">Upload CSV</label>
                 <input type="file" id="file" name="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                <div class="mt-4">
-                    <label for="my-select">Cource</label>
-                    <select id="my-select" name="cource_id" class="form-control">
-                        @foreach ($streams as $stream)
-                            <option value="{{ $stream->id }}">{{ $stream->name }}</option>
-                        @endforeach
-                    </select>
-                    <label for="my-select">Sem</label>
-                    <select id="my-select" name="sem" class="form-control">
-                        @for ($i = 1; $i <= 8; $i++)
-                            <option value="{{$i}}">{{$i}}</option>
-                        @endfor
-                    </select>
-                </div>
                 <button class="btn btn-warning mt-2">Submit</button>
             </div>
             @error('file')
@@ -35,12 +22,12 @@
                 <p>{{ $message }}</p>
             @enderror
             @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-@if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
+            @if(session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
         </div>
     </form>
 </div>
@@ -98,11 +85,11 @@ Note:- press any button below this <b>at your own risk</b> beacause after press 
         <span class="info-box-icon"><i class="fas fa-chevron-circle-up"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">Yes I Ready to take Risk</span>
-          <span class="info-box-number">41,410</span>
-          <span class="progress-description">
-            Students are Promoted to +1 sem
-          </span>
+          <span class="info-box-text info-box-number">Yes I Ready to take Risk</span>
+          <small>
+            - All Students are Promoted to +1 sem<br>
+            - last sem students Data will be removed(unrecoverable)<br>(file, data from database, etc.)
+          </small>
         </div>
         <!-- /.info-box-content -->
       </div>
@@ -116,9 +103,9 @@ Note:- press any button below this <b>at your own risk</b> beacause after press 
         <div class="info-box-content">
           <span class="info-box-text">Yes I Ready to take Risk</span>
           <span class="info-box-number">41,410</span>
-          <span class="progress-description">
-            Students are Demote to -1 sem
-          </span>
+          <small>
+            Deleted Students data are not recover
+          </small>
         </div>
         <!-- /.info-box-content -->
       </div>

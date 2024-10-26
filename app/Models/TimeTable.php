@@ -5,20 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+class TimeTable extends Model
 {
     use HasFactory;
-    protected $table = 'subjects';
 
     protected $fillable = [
-        'subject_code',
+        'day',
+        'div',
         'course_id',
-        'name',
         'sem',
+        'subject_id',
+        'StartDate',
+        'EndDate',
     ];
 
     public function course()
     {
         return $this->belongsTo(Cource::class, 'course_id');
+    }
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
 }

@@ -39,7 +39,7 @@ class LabController extends Controller
             $data = $request->except(['_token', 'date', 'file']);
             $data['id'] = !empty($request->id)?$request->id:null;
             $data['StartTime'] = $StartTime->format('Y-m-d H:i:s');
-            $data['EndTime'] = $EndTime->format('Y-m-d H:i:s');;
+            $data['EndTime'] = $EndTime->format('Y-m-d H:i:s');
             $data['file_path'] = $filePath;
 
             $this->labRepo->UpdateOrCreate($data);

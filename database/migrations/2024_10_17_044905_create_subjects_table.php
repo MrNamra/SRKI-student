@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('subject_code');
-            $table->foreignId('cource_id')->refrences('id')->on('cources');
-            $table->string('name');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade')->onUpdate('cascade');            $table->string('name');
             $table->tinyInteger('sem');
             $table->timestamps();
         });

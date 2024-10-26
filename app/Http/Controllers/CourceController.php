@@ -32,7 +32,7 @@ class CourceController extends Controller
         if($id){
             $res = Subject::find($id);
         }else{
-            $res = Subject::where('cource_id', $request->cource_id)->where('sem', $request->sem)->get();
+            $res = Subject::where('course_id', $request->cource_id)->where('sem', $request->sem)->get();
         }
         // Prepare the response
         return response()->json($res);
@@ -100,7 +100,7 @@ class CourceController extends Controller
     public function addSubject(Request $request){
         try{
             $request->validate([
-                'cource_id' => 'required',
+                'course_id' => 'required',
                 'sem' => 'required',
                 'name' => 'required',
                 'subject_code' => 'required',

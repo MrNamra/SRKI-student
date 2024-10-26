@@ -6,7 +6,7 @@
 
         <title>SRKI Subtation Portal</title>
         <!-- Google Font: Source Sans Pro -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> --}}
         <!-- Font Awesome -->
         <link rel="stylesheet" href="{{ url('/plugins/fontawesome-free/css/all.min.css') }}">
         <!-- Select2 -->
@@ -44,7 +44,10 @@
                             <a href="{{route('student.dashboard')}}" class="nav-link {{Request::is('student/dashboard')? 'active' : ''}}">Home</a>
                         </li>
                         <li class="nav-item d-none d-sm-inline-block">
-                            <a href="#" class="nav-link">Contact</a>
+                            <a href="#" class="nav-link">Uploaded Assignment(soon)</a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block">
+                            <a href="#" class="nav-link">Pendding Assignment(soon)</a>
                         </li>
                     </ul>
         
@@ -103,7 +106,7 @@
             </aside>
             <!-- /.control-sidebar -->
         </div>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="{{url('/plugins/jquery/jquery.min.js')}}"></script>
         <!-- DataTable -->
         <script src="{{url('/plugins/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{url('/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>

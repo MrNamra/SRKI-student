@@ -10,9 +10,10 @@ class AssignmentInfo extends Model
     use HasFactory;
     protected $table = 'assignment_info';
 
-    protected $fillebal = [
+    protected $fillable = [
         'en_no',
         'assingment_id',
+        'file_path',
     ];
 
     public function students(){

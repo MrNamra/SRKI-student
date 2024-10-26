@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('feculty_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lab_id')->refrences('id')->on('lab_schedules');
+            $table->foreignId('lab_id')->constrained('lab_schedules')->on('lab_schedules')->onDelete('cascade')->onUpdate('cascade');
             $table->text('path');
             $table->string('title');
-            $table->Integer('assignment_no');
+            $table->integer('assignment_no');
             $table->timestamps();
         });
     }

@@ -125,7 +125,7 @@ class LabRepository extends BaseRepository implements LabRepositoryInterface
             'id' => $data->id,
             'title' => $data->title,
             'dec' => $data->dec,
-            'cource_id' => $data->subject->cource_id,
+            'cource_id' => $data->subject->course_id,
             'sem' => $data->subject->sem,
             'sub_id' => $data->sub_id,
             'div' => $data->div,

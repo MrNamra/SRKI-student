@@ -28,9 +28,7 @@ class StudentController extends Controller
     public function store(Request $request){
         set_time_limit(6000);
         $request->validate([
-            'file' => 'required|mimes:csv,txt',
-            'sem' => 'required',
-            'cource_id' => 'required',
+            'file' => 'required|mimes:csv,txt'
         ]);
         try{
             $this->studentRepo->store($request);

@@ -11,6 +11,35 @@
   </div><!-- /.container-fluid -->
 </section>
 <section class="content">
+    <div class="row col-12 mb-3">
+        <select class="form-control select2 col-3" name="sem">
+            <option selected disabled>Select Day</option>
+            <option value="monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wensday">Wensday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+        </select>
+        <select class="form-control select2 col-3 ml-2" id="search_cource_id" name="cource_id">
+            <option selected disabled>Select Course</option>
+            @foreach ($cources as $cource)
+                <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+            @endforeach
+        </select>
+        <select class="form-control select2 col-1" id="search_sem" name="sem">
+            <option selected disabled>Select sem</option>
+        </select>
+        <select class="form-control select2 col-2" name="div">
+            <option selected disabled>Select div</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+        </select>
+        <input type="submit" class="btn btn-info" value="Search">
+    </div>
     <form class="upload-form" enctype="multipart/form-data" method="post">
         @csrf
         <div class="card">
@@ -196,7 +225,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                {{-- <tr>
                     <td>
                         #
                     </td>
@@ -254,7 +283,7 @@
                             Delete
                         </a>
                     </td>
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
     </div>
@@ -622,7 +651,6 @@
                 }
             })
         });
-
         $('.projects').on('click', '.delete-data', function(){
             Swal.fire({
                 title: 'Are you sure?',
@@ -670,7 +698,6 @@
                 }
             })
         })
-
         $(document).on('click', '.edit-data', function() {
             var id = $(this).data('id');
             $('.overlay').show(); // Show overlay
@@ -746,6 +773,13 @@
                     })
                 }
             });
+        });
+        $("#search_cource_id").on("change", function() {
+            var selectedData = $(this).select2("data")[0];
+            var sem = selectedData ? selectedData.element.dataset.sem : null;
+            for(var i=1;i<=sem;i++){
+                $("#search_sem").append('<option value="'+i+'">'+i+'</option>');
+            }
         });
     });
 

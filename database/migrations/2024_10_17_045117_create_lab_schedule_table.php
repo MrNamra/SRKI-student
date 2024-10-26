@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lab_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sub_id')->references('id')->on('subjects');
+            $table->foreignId('sub_id')->references('id')->on('subjects')->onDelete('cascade')->onUpdate('cascade');
             $table->string('div');
             $table->dateTime('StartTime');
             $table->dateTime('EndTime');

@@ -14,6 +14,7 @@ class Student extends Authenticatable
     protected $keyType = 'string';
     protected $primaryKey = 'enrollment_no';
     public $incrementing = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'enrollment_no',
@@ -27,5 +28,9 @@ class Student extends Authenticatable
     public function course()
     {
         return $this->belongsTo(Cource::class, 'course_id');
+    }
+    public function assignment()
+    {
+        return $this->hasMany(AssignmentInfo::class, 'en_no', 'enrollment_no');
     }
 }

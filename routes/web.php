@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AssginamnetController;
 use App\Http\Controllers\Admin\LabController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\TimetableController;
 use App\Http\Controllers\CourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -52,7 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('subject', [CourceController::class, 'deleteSubject'])->name('delete-subject');
     Route::post('courses', [CourceController::class, 'addcourse'])->name('add-course');
     Route::post('addSub', [CourceController::class, 'addSubject'])->name('add-subject');
-    Route::post('students', [StudentController::class, 'store'])->name('add-students');
+    
+    Route::get('exam', [StudentController::class, 'index'])->name('exam');
+    
+    Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');
+    Route::post('timetable', [TimetableController::class, 'store'])->name('add-timetable');
 });
 
 require __DIR__.'/auth.php';

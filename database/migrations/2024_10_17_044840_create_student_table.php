@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('enrollment_no')->primary();
             $table->string('ip');
             $table->string('name');
-            $table->foreignId('course_id')->refrences('id')->on('courses');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('sem');
             $table->string('div');
             $table->timestamps();
