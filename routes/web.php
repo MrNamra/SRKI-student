@@ -58,6 +58,8 @@ Route::middleware('auth')->group(function () {
     
     Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');
     Route::post('timetable', [TimetableController::class, 'store'])->name('add-timetable');
+    Route::get('gettimetable', [TimetableController::class, 'TimeTableList'])->name('getTimetable');
+    Route::delete('deleteTimeTable', [TimetableController::class, 'destroy'])->name('deleteTimeTable');
 });
 
 require __DIR__.'/auth.php';

@@ -27,12 +27,7 @@ class TimetableController extends Controller
     }
     public function create()
     {
-        //
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -60,28 +55,29 @@ class TimetableController extends Controller
             return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function TimeTableList(Request $request)
     {
-        
+        try{
+            $timetable = $this->TimeTableRepo->TimeTableList($request);
+            return response()->json($timetable->original);
+        } catch (Exception $ex) {
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Request $request)
     {
-        //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TimeTable $timeTable)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            $ids = $request->input('ids');
+            if ($ids) {
+                TimeTable::whereIn('id', $ids)->delete(); // Adjust according to your model
+                return response()->json(['status' => true]);
+            }
+            return response()->json(['status' => false, 'message' => 'Pease Select first']);
+        } catch (Exception $ex){
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
     }
 }

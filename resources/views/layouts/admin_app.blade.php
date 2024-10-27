@@ -34,6 +34,8 @@
     <link rel="stylesheet" href="{{url('/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <!-- DataTable -->
     <link rel="stylesheet" href="{{url('/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{url('/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{url('/plugins/datatables-select/css/select.bootstrap4.min.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{url('plugins/summernote/summernote-bs4.min.css') }}">
 </head>
@@ -206,6 +208,11 @@
     <!-- DataTable -->
     <script src="{{url('/plugins/datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{url('/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-select/js/dataTables.select.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-select/js/select.bootstrap4.min.js')}}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{url('/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <!-- Select2 -->
