@@ -44,10 +44,7 @@
                             <a href="{{route('student.dashboard')}}" class="nav-link {{Request::is('student/dashboard')? 'active' : ''}}">Home</a>
                         </li>
                         <li class="nav-item d-none d-sm-inline-block">
-                            <a href="#" class="nav-link">Uploaded Assignment(soon)</a>
-                        </li>
-                        <li class="nav-item d-none d-sm-inline-block">
-                            <a href="#" class="nav-link">Pendding Assignment(soon)</a>
+                            <a href="{{route('uploaded.assignment')}}" class="nav-link">Uploaded/Pending Assignment</a>
                         </li>
                     </ul>
         
@@ -122,6 +119,21 @@
         <script src="{{url('/dist/js/adminlte.min.js')}}"></script>
         <!-- Select2 -->
         <script href="{{url('/plugins/select2/js/select2.full.min.js')}}"></script>
+        <script>
+            let timeout = 120000; // 2 minutes
+            let debounceTimeout;
+
+            function resetTimer() {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    fetch('{{route("wow")}}');
+                    location.reload();
+                }, 25000); // Wait for 1 second after the last event before sending a request
+            }
+
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+        </script>
         @yield('js')
     </body>
 </html>

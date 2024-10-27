@@ -69,4 +69,8 @@ class StudentsController extends Controller
             return response()->json(["status" => false, "error" => "id: " . time() . "\nError from server please try again or contact faculty!"], 500);
         }
     }
+    public function uploadedAssignment() {
+        $results = $this->studentRepo->uploadedAssignment();
+        return view('student.assignment', ['results' => $results]);
+    }
 }

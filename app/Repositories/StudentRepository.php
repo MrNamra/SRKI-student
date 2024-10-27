@@ -234,4 +234,10 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             return $file->storeAs($path, $customFileName, 'public');
         }
     }
+    public function uploadedAssignment() {
+        $current_lab = session('lab');
+        $allLab = LabSchedule::where('sub_id', $current_lab->sub_id)->where('div', $current_lab->div)->orderBy('id', 'desc')->with('assignment')->get();
+        auth()->guard('student')->user();
+        return $allLab;
+    }
 }

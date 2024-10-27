@@ -9,16 +9,19 @@ use App\Http\Controllers\CourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Middleware\InactivityLogout;
 use App\Http\Middleware\StudentAuth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StudentsController::class, 'loginpage'])->name('student.login');
 Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
 
-Route::middleware(StudentAuth::class)->prefix('student')->group(function () {
+Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('student')->group(function () {
     Route::post('/studentLogout', [StudentsController::class, 'logout'])->name('student.logout');
     Route::get('/dashboard', [StudentsController::class, 'index'])->name('student.dashboard');
     Route::post('/dashboard', [StudentsController::class, 'submitAssignment'])->name('upload.assignment');
+    Route::get('/uploaded', [StudentsController::class, 'uploadedAssignment'])->name('uploaded.assignment');
+    Route::get('/wow', function () { session(['lastActivity' => time()]); return response()->json(['success' => true]); })->name('wow');
 });
 
 

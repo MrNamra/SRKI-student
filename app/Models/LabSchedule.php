@@ -25,6 +25,6 @@ class LabSchedule extends Model
         return $this->belongsTo(Subject::class, 'sub_id');        
     }
     public function assignment() {
-        return $this->belongsTo(AssignmentInfo::class, 'assingment_id');        
+        return $this->hasOne(AssignmentInfo::class, 'assingment_id', 'id');
     }
 }
