@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AssginamnetController;
 use App\Http\Controllers\Admin\LabController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TimetableController;
 use App\Http\Controllers\CourceController;
@@ -54,12 +55,16 @@ Route::middleware('auth')->group(function () {
     Route::post('courses', [CourceController::class, 'addcourse'])->name('add-course');
     Route::post('addSub', [CourceController::class, 'addSubject'])->name('add-subject');
     
-    Route::get('exam', [StudentController::class, 'index'])->name('exam');
+    Route::get('exams', [StudentController::class, 'index'])->name('exam');
     
     Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');
     Route::post('timetable', [TimetableController::class, 'store'])->name('add-timetable');
     Route::get('gettimetable', [TimetableController::class, 'TimeTableList'])->name('getTimetable');
     Route::delete('deleteTimeTable', [TimetableController::class, 'destroy'])->name('deleteTimeTable');
+    Route::get('findtimetable', [TimetableController::class, 'FindTimeTable'])->name('searchlab');
+    
+    Route::get('report', [ReportController::class, 'index'])->name('report');
+    Route::get('getreport', [ReportController::class, 'GenerateReport'])->name('genreport');
 });
 
 require __DIR__.'/auth.php';

@@ -11,35 +11,38 @@
   </div><!-- /.container-fluid -->
 </section>
 <section class="content">
-    <div class="row col-12 mb-3">
-        <select class="form-control select2 col-3" name="sem">
-            <option selected disabled>Select Day</option>
-            <option value="monday">Monday</option>
-            <option value="Tuesday">Tuesday</option>
-            <option value="Wensday">Wensday</option>
-            <option value="Thursday">Thursday</option>
-            <option value="Friday">Friday</option>
-            <option value="Saturday">Saturday</option>
-        </select>
-        <select class="form-control select2 col-3 ml-2" id="search_cource_id" name="cource_id">
-            <option selected disabled>Select Course</option>
-            @foreach ($cources as $cource)
-                <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
-            @endforeach
-        </select>
-        <select class="form-control select2 col-1" id="search_sem" name="sem">
-            <option selected disabled>Select sem</option>
-        </select>
-        <select class="form-control select2 col-2" name="div">
-            <option selected disabled>Select div</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
-            <option value="E">E</option>
-        </select>
-        <input type="submit" class="btn btn-info" value="Search">
-    </div>
+    <form id="searchLeb">
+        <div class="row col-12 mb-3">
+            @csrf
+            <select class="form-control select2 col-3" name="sem">
+                <option selected disabled>Select Day</option>
+                <option value="monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wensday">Wensday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+            </select>
+            <select class="form-control select2 col-3 ml-2" id="search_cource_id" name="cource_id">
+                <option selected disabled>Select Course</option>
+                @foreach ($cources as $cource)
+                    <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                @endforeach
+            </select>
+            <select class="form-control select2 col-1" id="search_sem" name="sem">
+                <option selected disabled>Select sem</option>
+            </select>
+            <select class="form-control select2 col-2" name="div">
+                <option selected disabled>Select div</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+            </select>
+            <input type="submit" class="btn btn-info" value="Search">
+        </div>
+    </form>
     <form class="upload-form" enctype="multipart/form-data" method="post">
         @csrf
         <div class="card">
@@ -414,7 +417,6 @@
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -781,6 +783,32 @@
                 $("#search_sem").append('<option value="'+i+'">'+i+'</option>');
             }
         });
+        $("#searchLeb").on("submit", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '{{ route("searchlab") }}',
+                method: 'GET',
+                data: formData,
+                success: function(res) {
+                    $('.upload-form').find("[name=div]").val(res.div).trigger('change')
+                    $('.upload-form').find("[name=cource_id]").val(res.course_id).trigger('change')
+                    $('.upload-form').find("[name=sem]").val(res.sem).trigger('change')
+                    setTimeout(function() {
+                        $('.upload-form').find("[name=sub_id]").val(res.subject_id).trigger('change')
+                    }, 1000)
+                    $('.upload-form').find("[name=date]").val(res.StartDate+' - '+res.EndDate)
+                    
+                },
+                error: function(err) {
+                    console.log(err);
+                    Toast.fire({
+                        icon: 'error',
+                        title: err.responseJSON.message
+                    })
+                }
+            });
+        })
     });
 
 </script>

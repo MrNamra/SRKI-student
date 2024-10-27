@@ -78,4 +78,11 @@ class TimeTableRepository extends BaseRepository
             }),
         ]);
     }
+    public function getTimeTable($request) {
+        $timeTable = TimeTable::where('div', $request->input('div'))
+                                ->where('sem', $request->input('sem'))
+                                ->where('course_id', $request->input('cource_id'))
+                                ->first();
+        return $timeTable ?? null;
+    }
 }

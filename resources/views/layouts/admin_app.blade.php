@@ -158,7 +158,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('exam')}}" class="nav-link {{Request::is('exam')?"active": ''}}">
+                            <a href="{{route('exam')}}" class="nav-link {{Request::is('exams')?"active": ''}}">
                                 <i class="nav-icon fas fa-chalkboard-teacher"></i>
                                 <p>
                                     Exam
@@ -174,7 +174,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('timetable') }}" class="nav-link {{Request::is('report')?"active": ''}}">
+                            <a href="{{ route('report') }}" class="nav-link {{Request::is('report')?"active": ''}}">
                                 <i class="nav-icon fas fa-scroll"></i>
                                 <p>
                                     Report
@@ -213,6 +213,13 @@
     <script src="{{url('/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
     <script src="{{url('/plugins/datatables-select/js/dataTables.select.min.js')}}"></script>
     <script src="{{url('/plugins/datatables-select/js/select.bootstrap4.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{url('/plugins/jszip/jszip.min.js')}}"></script>
+    <script src="{{url('/plugins/pdfmake/pdfmake.min.js')}}"></script>
+    <script src="{{url('/plugins/pdfmake/vfs_fonts.js')}}"></script>
+    <script src="{{url('/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{url('/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{url('/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <!-- Select2 -->

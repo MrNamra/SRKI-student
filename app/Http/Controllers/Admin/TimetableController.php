@@ -70,13 +70,25 @@ class TimetableController extends Controller
     public function destroy(Request $request)
     {
         try{
-            $ids = $request->input('ids');
+            $ids = $request->input('id');
             if ($ids) {
                 TimeTable::whereIn('id', $ids)->delete(); // Adjust according to your model
                 return response()->json(['status' => true]);
             }
             return response()->json(['status' => false, 'message' => 'Pease Select first']);
         } catch (Exception $ex){
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
+    }
+    public function FindTimeTable(Request $request)
+    {
+        try{
+            $timetable = $this->TimeTableRepo->getTimeTable($request);
+            if($timetable){
+                return response()->json($timetable);
+            }
+            return response()->json(["status" => false, "message" => "No data found"], 404);
+        } catch (Exception $ex) {
             return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
         }
     }

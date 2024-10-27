@@ -128,18 +128,19 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         DB::beginTransaction();
         try {
             for($i = 8; $i >= 1; $i--){
-                $students = Student::with('course')->with('assignment')->where('sem', 1);
-                if($students->get()[0]->course->no_of_sem == $i){
-                    foreach($students->get() as $student){
+                $students = Student::with('course')->with('assignment')->where('sem', $i)->get();
+                if($students->isNotEmpty() && $students[0]->course->no_of_sem == $i){
+                    foreach($students as $student){
                         foreach($student->assignment as $assignment){
-                            if(Storage::exists($assignment->file_path)){
-                                Storage::delete($assignment->file_path);
+                            $DirPath = 'assignments/'.$student->course->name.'/'.$i.'/'.$student->div.'/'.$student->enrollment_no;
+                            if(Storage::disk('public')->exists($DirPath)){
+                                Storage::deleteDirectory($DirPath);
                             }
                         }
                         $student->delete();
                     }
                 }
-                $students->update(['sem' => $i + 1]);
+                Student::with('course')->with('assignment')->where('sem', $i)->update(['sem' => $i + 1]);
             }
             DB::commit();
             return true;
