@@ -28,6 +28,8 @@ class InactivityLogout
             // If the last activity time is set, check if it exceeds the timeout
             if ($lastActivity && (time() - $lastActivity) > $timeout) {
                 // Log out the user
+                session()->flush();
+                Session::forget('lastActivity');
                 Auth::guard('student')->logout();
                 return redirect('/'); // Redirect to login or wherever you want
             }

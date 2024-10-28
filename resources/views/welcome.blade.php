@@ -1,31 +1,6 @@
 @extends('layouts.app')
 @section('main')
     <section class="content-header d-flex align-items-center justify-content-center" style="min-height: 90vh;">
-        <!-- Horizontal Form -->
-        {{-- <div class="card card-info w-50">
-            <div class="card-header text-center">
-                <h3 class="card-title">Login</h3>
-            </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form id="login" class="form-horizontal" method="post">
-                @csrf
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-4 col-12 col-form-label text-left">Enrollment No.</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="en_no" name="enrollment_no" placeholder="Enrollment No...">
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-info">Sign in</button>
-                    <button type="reset" class="btn btn-default">Cancel</button>
-                </div>
-                <!-- /.card-footer -->
-            </form>
-        </div> --}}
         <div class="lockscreen-wrapper">
         <center>Welcome to</center>
             <div class="lockscreen-logo">
@@ -33,13 +8,10 @@
             </div>
             <!-- START LOCK SCREEN ITEM -->
             <div class="lockscreen-item">
-                <!-- lockscreen image -->
                 <div class="lockscreen-image">
                     <img src="{{url('/dist/img/man.png')}}" alt="User Image">
                 </div>
-                <!-- /.lockscreen-image -->
                 
-                <!-- lockscreen credentials (contains the form) -->
                 <form id="login" method="post" class="lockscreen-credentials">
                     @csrf
                     <div class="input-group">
@@ -52,9 +24,7 @@
                         </div>
                     </div>
                 </form>
-                <!-- /.lockscreen credentials -->
             </div>
-            <!-- /.lockscreen-item -->
             <div class="help-block text-center">
               Enter your enrollment number to access dashboard
             </div>

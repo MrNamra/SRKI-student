@@ -57,10 +57,15 @@ class StudentsController extends Controller
         ]);
     
         try {
-            if ($request->hasFile('file')) {
+            $assignment_id = $id ?? session('lab')->id;
+            $lab = \App\Models\LabSchedule::find($assignment_id);
+            if($assignment_id != session('lab')->sub_id)
+                return response()->json(["status" => false, "error" => "Assignmnet Not Found!"], 404);
+            
+                if ($request->hasFile('file')) {
                 // Use the repository to handle the assignment submission
                 $file = $request->file('file');
-                $path = $this->studentRepo->submitAssignment($file, session('lab'));
+                $path = $this->studentRepo->submitAssignment($file, $request->id );
     
                 return response()->json(['status' => true], 200);
             }
@@ -72,5 +77,8 @@ class StudentsController extends Controller
     public function uploadedAssignment() {
         $results = $this->studentRepo->uploadedAssignment();
         return view('student.assignment', ['results' => $results]);
+    }
+    public function examLogin() {
+        return view('student.exam');
     }
 }

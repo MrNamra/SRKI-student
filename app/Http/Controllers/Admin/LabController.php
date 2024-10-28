@@ -22,7 +22,7 @@ class LabController extends Controller
             'sub_id' => 'required|numeric',
             'div' => 'required',
             'date' => 'required',
-            'file' => 'required|file',
+            'file' => 'exclude_if:file,null|file',
             'cource_id' => 'required|numeric',
             'sem' => 'required|numeric',
         ]);
@@ -30,7 +30,7 @@ class LabController extends Controller
             [$StartTime , $EndTime] = explode(' - ', $request->date);
             $StartTime = Carbon::createFromFormat('m/d/Y h:i A', $StartTime, 'Asia/Kolkata');
             $EndTime = Carbon::createFromFormat('m/d/Y h:i A', $EndTime, 'Asia/Kolkata');
-            
+
             $filePath = null;
             if ($request->hasFile('file')) {
                 $filePath = $request->file('file')->store('assignments', 'public');
@@ -38,8 +38,8 @@ class LabController extends Controller
             
             $data = $request->except(['_token', 'date', 'file']);
             $data['id'] = !empty($request->id)?$request->id:null;
-            $data['StartTime'] = $StartTime->format('Y-m-d H:i:s');
-            $data['EndTime'] = $EndTime->format('Y-m-d H:i:s');
+            $data['StartTime'] = $StartTime;
+            $data['EndTime'] = $EndTime;
             $data['file_path'] = $filePath;
 
             $this->labRepo->UpdateOrCreate($data);

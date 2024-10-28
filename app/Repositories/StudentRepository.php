@@ -190,7 +190,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
 
         return true;
     }
-    public function submitAssignment($file) {
+    public function submitAssignment($file, $id = null) {
         $session = session('lab');
         $student = Auth::guard('student')->user();
         $customFileName = $session->title . '.' . $file->getClientOriginalExtension();
@@ -198,7 +198,8 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $path = 'assignments/' . $course . '/' . $session->sem . '/' . $session->div . '/' . $student->enrollment_no . '/' . $session->subject_name;
 
         // Check if an assignment already exists for this student
-        $assignment = AssignmentInfo::where('assingment_id', $session->id)
+        $assignment_id = $id ?? $session->id;
+        $assignment = AssignmentInfo::where('assingment_id', $assignment_id)
             ->where('en_no', $student->enrollment_no)
             ->first();
 
@@ -223,10 +224,14 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
                 return $file->storeAs($path, $customFileName, 'public');
             }
         } else {
+            $lab = LabSchedule::find($assignment_id);
+            if($assignment_id != session('lab')->sub_id)
+                return Throw new Exception('Invalid Assignment');
             // If it doesn't exist, create a new record
             $assignment = new AssignmentInfo();
+            $assignment->id = $student->id;
             $assignment->en_no = $student->enrollment_no;
-            $assignment->assingment_id = $session->id;
+            $assignment->assingment_id = $assignment_id;
             $assignment->file_path = $path;
             $assignment->save();
 

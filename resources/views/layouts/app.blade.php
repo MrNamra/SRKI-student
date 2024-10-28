@@ -44,7 +44,7 @@
                             <a href="{{route('student.dashboard')}}" class="nav-link {{Request::is('student/dashboard')? 'active' : ''}}">Home</a>
                         </li>
                         <li class="nav-item d-none d-sm-inline-block">
-                            <a href="{{route('uploaded.assignment')}}" class="nav-link">Uploaded/Pending Assignment</a>
+                            <a href="{{route('uploaded.assignment')}}" class="nav-link {{Request::is('student/uploaded')? 'active' : ''}}">Uploaded/Pending Assignment</a>
                         </li>
                     </ul>
         
@@ -92,7 +92,7 @@
                 
             <footer class="main-footer">
                 <div class="float-right d-none d-sm-block">
-                  <b>Version</b> 1.0.0
+                  <b>Version</b> 1.0.2
                 </div>
                 <strong>Devloped By <a target="_blank" href="https://instagram.com/oye_namu">Namra Ramsha</a>.</strong> All rights reserved.
             </footer>

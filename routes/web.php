@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StudentsController::class, 'loginpage'])->name('student.login');
 Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
+Route::get('exam', [StudentsController::class, 'examLogin'])->name('student.exam');
 
 Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('student')->group(function () {
     Route::post('/studentLogout', [StudentsController::class, 'logout'])->name('student.logout');
