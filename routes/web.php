@@ -25,12 +25,6 @@ Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('studen
     Route::get('/wow', function () { session(['lastActivity' => time()]); return response()->json(['success' => true]); })->name('wow');
 });
 
-
-// Route::get('/dashboard', function () {
-//     return view('admin.dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -59,7 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::post('courses', [CourceController::class, 'addcourse'])->name('add-course');
     Route::post('addSub', [CourceController::class, 'addSubject'])->name('add-subject');
     
-    Route::get('exams', [StudentController::class, 'index'])->name('exam');
+    Route::get('exams', [StudentController::class, 'exam'])->name('exam');
+    Route::get('exam-students', [StudentController::class, 'getStudnets'])->name('getExamStudents');
     
     Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');
     Route::post('timetable', [TimetableController::class, 'store'])->name('add-timetable');

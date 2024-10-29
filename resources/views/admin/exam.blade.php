@@ -30,11 +30,19 @@
             </div>
             <!-- /.card -->
             <div class="row col-11 mt-3 ml-3">
-                <div class="col-12 mb-3">
+                <div class="col-9 mb-3">
                     <label>Exam Title</label>
                     <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
                 </div>
-                <div class="col-4">
+                
+                <div class="col-3">
+                    <label>Exam Type</label>
+                    <select class="form-control select2 col-12" name="exam">
+                        <option>Internal</option>
+                        <option>External</option>
+                    </select>
+                </div>
+                <div class="col-3">
                     <select class="form-control select2 col-12 select-course" name="cource_id" id="select-course">
                         <option selected disabled>Select Course</option>
                         @foreach ($streams as $cource)
@@ -305,13 +313,13 @@
               <i class="fas fa-2x fa-sync fa-spin"></i>
           </div>
         <div class="modal-header">
-          <h4 class="modal-title">Assingment Infomation</h4>
+          <h4 class="modal-title">Exam Infomation</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <table class="table table-striped student-projects">
+          {{-- <table class="table table-striped student-projects" id="jsGrid">
             <thead>
                 <tr>
                     <th>En.NO.</th>
@@ -328,7 +336,8 @@
                     <td></td>
                 </tr>
             </thead>
-          </table>
+          </table> --}}
+          <div id="jsGrid"></div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -340,12 +349,36 @@
 </div>
 @endsection
 @section('js')
+<style>
+    @media (max-width: 768px) {
+        .jsgrid-header-cell, .jsgrid-cell {
+            padding: 10px;
+            font-size: 14px;
+        }
+    
+        .jsgrid-control-field a {
+            padding: 5px;
+        }
+    }
+    #jsGrid {
+    overflow-x: auto;
+}
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+}
+</style>
 <!-- date-range-picker -->
 <script src="{{url('/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- dropzonejs -->
 <script src="{{url('/plugins/dropzone/min/dropzone.min.js')}}"></script>
 <!-- Summernote -->
 <script src="{{url('/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<style src="{{url('/plugins/jsgrid/jsgrid-theme.min.css')}}"></style>
+<style src="{{url('/plugins/jsgrid/jsgrid.min.css')}}"></style>
+<script src="{{url('/plugins/jsgrid/demos/db.js')}}"></script>
+<script src="{{url('/plugins/jsgrid/jsgrid.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         $('.upload-form')[0].reset();
@@ -374,7 +407,7 @@
             "autoWidth": true,
             "responsive": true,
             ajax: {
-            url : '{{route("getAssignmentList")}}',
+            url : '{{route("getExamStudents")}}',
             dataSrc: 'data'
             },
             columns: [
@@ -382,47 +415,95 @@
                 { data: 'title' },
                 { data: 'subject' },
                 { data: 'sem' },
-                { data: 'submission_percentage' },
                 { data: 'time' },
                 { data: 'status' },
                 { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'"><i class="fas fa-pencil-alt"></i> edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'"><i class="fas fa-trash"></i> Delete</button><button class="btn btn-sm btn-primary view-data" data-id="'+data.id+'"><i class="fas fa-folder"></i> View</button>'; } } // Action column
             ]
         });
+        // $(document).on('click', '.view-data', function() {
+        //     $('.overlay-modal-xl').show();
+        //     $('#modal-xl').modal('show')
+        //     var id = $(this).data('id');
+        //     if ($.fn.DataTable.isDataTable('#jsGrid')) {
+        //         $('jsGrid').DataTable().destroy();
+        //     }
+        //     $('jsGrid').DataTable({
+        //         serverSide: true,
+        //         ordering: false,
+        //         "lengthChange": false,
+        //         "autoWidth": true,
+        //         "responsive": true,
+        //         ajax: {
+        //             url: '{{ route("getProjectSubmissions") }}',
+        //             data: { id: id },
+        //             dataSrc: 'data'
+        //         },
+        //         columns: [
+        //             { data: 'en_no' },
+        //             { data: 'name' },
+        //             { data: 'submitted' },
+        //             { data: 'created_at' },
+        //             { data: null, render: function(data, type, row) { 
+        //                 return `
+        //                     <!--<button class="btn btn-sm btn-primary edit-data" data-id="${data.id}"><i class="fas fa-pencil-alt"></i> Edit</button>
+        //                     <br>
+        //                     <button class="btn btn-sm btn-danger delete-data" data-id="${data.id}"><i class="fas fa-trash"></i> Delete</button>
+        //                     <button class="btn btn-sm btn-primary view-data" data-id="${data.id}"><i class="fas fa-folder"></i> View</button>-->
+        //                 `;
+        //             } } // Action column
+        //         ]
+        //     });
+        //     $('.overlay-modal-xl').hide();
+        // });
         $(document).on('click', '.view-data', function() {
             $('.overlay-modal-xl').show();
-            $('#modal-xl').modal('show')
+            $('#modal-xl').modal('show');
+
             var id = $(this).data('id');
-            if ($.fn.DataTable.isDataTable('.student-projects')) {
-                $('.student-projects').DataTable().destroy();
-            }
-            $('.student-projects').DataTable({
-                serverSide: true,
-                ordering: false,
-                "lengthChange": false,
-                "autoWidth": true,
-                "responsive": true,
-                ajax: {
-                    url: '{{ route("getProjectSubmissions") }}',
-                    data: { id: id },
-                    dataSrc: 'data'
+
+            $("#jsGrid").jsGrid({
+                width: "100%",
+                height: "400px",
+                filtering: false,
+                inserting: false,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                pageSize: 10,
+                pageButtonCount: 5,
+
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: '{{ route("getExamStudents") }}',
+                            data: { id: id },
+                            dataType: "json"
+                        }).then(function(response) {
+                            $('.overlay-modal-xl').hide();
+                            return response.data;
+                        });
+                    }
                 },
-                columns: [
-                    { data: 'en_no' },
-                    { data: 'name' },
-                    { data: 'submitted' },
-                    { data: 'created_at' },
-                    { data: null, render: function(data, type, row) { 
-                        return `
-                            <!--<button class="btn btn-sm btn-primary edit-data" data-id="${data.id}"><i class="fas fa-pencil-alt"></i> Edit</button>
-                            <br>
-                            <button class="btn btn-sm btn-danger delete-data" data-id="${data.id}"><i class="fas fa-trash"></i> Delete</button>
-                            <button class="btn btn-sm btn-primary view-data" data-id="${data.id}"><i class="fas fa-folder"></i> View</button>-->
-                        `;
-                    } } // Action column
+
+                fields: [
+                    { name: "en_no", title: "Enrollment No", type: "text", width: 50, editing: false },
+                    { name: "name", title: "Name", type: "text", width: 100, editing: false },
+                    { name: "marks", title: "Submitted", type: "text", width: 50, editing: true },
+                    // {
+                    //     title: "Actions",
+                    //     itemTemplate: function(_, item) {
+                    //         return `<button class="btn btn-sm btn-danger delete-data" data-id="${item.id}">
+                    //                     <i class="fas fa-trash"></i> Delete
+                    //                 </button>`;
+                    //     },
+                    //     width: 120
+                    // }
                 ]
             });
-            $('.overlay-modal-xl').hide();
         });
+
         $(document).on('change', '.select-course', function() {
             const selectedSem = $(this).find(':selected').attr('data-sem');
             const semesterDropdown = $(this).closest('.row').find('.select-sem');

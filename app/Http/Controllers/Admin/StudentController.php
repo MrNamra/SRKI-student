@@ -103,4 +103,18 @@ class StudentController extends Controller
             return response()->json(['message' => 'Error Getting data: ' . $e->getMessage()], 500);
         }
     }
+    public function exam(){
+        $streams = Cource::get();
+        return view('admin.exam', ['streams' => $streams]);
+    }
+    public function getStudnets(Request $request){
+        try {
+            $data = $this->studentRepo->getExamStudnetsAndUpadte($request, $request->id);
+            return response()->json($data->original);
+        } catch (Exception $ex) {
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
+        $streams = Cource::get();
+        return view('admin.exam', ['streams' => $streams]);
+    }
 }
