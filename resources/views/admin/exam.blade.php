@@ -258,9 +258,9 @@
 <div class="modal fade" id="modal-xl">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-          <div class="overlay overlay-modal-xl">
+          {{-- <div class="overlay overlay-modal-xl">
               <i class="fas fa-2x fa-sync fa-spin"></i>
-          </div>
+          </div> --}}
         <div class="modal-header">
           <h4 class="modal-title">Exam Infomation</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -306,10 +306,9 @@
 <script src="{{url('/plugins/dropzone/min/dropzone.min.js')}}"></script>
 <!-- Summernote -->
 <script src="{{url('/plugins/summernote/summernote-bs4.min.js')}}"></script>
-<style src="{{url('/plugins/jsgrid/jsgrid-theme.min.css')}}"></style>
-<style src="{{url('/plugins/jsgrid/jsgrid.min.css')}}"></style>
-<script src="{{url('/plugins/jsgrid/demos/db.js')}}"></script>
-<script src="{{url('/plugins/jsgrid/jsgrid.min.js')}}"></script>
+<link type="text/css" rel="stylesheet" href="{{url('/plugins/jsgrid/jsgrid-theme.min.css')}}"></link>
+<link type="text/css" rel="stylesheet" href="{{url('/plugins/jsgrid/jsgrid.min.css')}}"></link>
+<script type="text/javascript" src="{{url('/plugins/jsgrid/jsgrid.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         $('.upload-form')[0].reset();
@@ -337,7 +336,7 @@
             autoWidth: true,
             responsive: true,
             ajax: {
-                url: '{{ route("getExamStudents") }}',
+                url: '{{ route("getExamList") }}',
                 dataSrc: 'data',
             },
             columns: [
@@ -451,15 +450,15 @@
             $('.overlay-modal-xl').show();
             $('#modal-xl').modal('show');
 
-            var id = $(this).data('id');
+            id = $(this).data('id');
 
             $("#jsGrid").jsGrid({
                 width: "100%",
                 height: "400px",
-                filtering: false,
+                filtering: true,
                 inserting: false,
                 editing: true,
-                sorting: true,
+                sorting: false,
                 paging: true,
                 autoload: true,
                 pageSize: 10,
@@ -469,32 +468,63 @@
                     loadData: function(filter) {
                         return $.ajax({
                             type: "GET",
-                            url: '{{ route("getExamStudents") }}',
-                            data: { id: id },
+                            url: '{{ route("getExamCandidets") }}',
+                            data: { 
+                                id: id,
+                                search: filter
+                            },
                             dataType: "json"
                         }).then(function(response) {
                             $('.overlay-modal-xl').hide();
-                            return response.data;
+                            return response.data; 
+                        }).fail(function(xhr, status, error) {
+                            console.error("Load data failed:", xhr.responseText);
+                        });
+                    },
+                    updateItem: function(item) {
+                        console.log("Updating item:", item);
+                        return $.ajax({
+                            type: "POST",
+                            url: '{{ route("updateMarks") }}',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                id: id,
+                                en_no: item.en_no,
+                                marks: item.marks
+                            },
+                            dataType: "json"
+                        }).done(function(response) {
+                            console.log("Update response:", response);
+                            return response; 
+                        }).fail(function(xhr, status, error) {
+                            console.error("Update failed:", xhr.responseText);
                         });
                     }
                 },
 
+                onItemUpdating: function(args) {
+                    console.log("Item is about to be updated:", args.item);
+                    args.cancel = false; 
+                },
+
+                onItemUpdated: function(args) {
+                    $("#jsGrid").jsGrid("loadData"); 
+                },
                 fields: [
-                    { name: "en_no", title: "Enrollment No", type: "text", width: 50, editing: false },
-                    { name: "name", title: "Name", type: "text", width: 100, editing: false },
-                    { name: "marks", title: "Submitted", type: "text", width: 50, editing: true },
-                    // {
-                    //     title: "Actions",
-                    //     itemTemplate: function(_, item) {
-                    //         return `<button class="btn btn-sm btn-danger delete-data" data-id="${item.id}">
-                    //                     <i class="fas fa-trash"></i> Delete
-                    //                 </button>`;
-                    //     },
-                    //     width: 120
-                    // }
+                    { name: "en_no", title: "EnNo", type: "text", editing: false },
+                    { name: "name", title: "Name", type: "text", editing: false },
+                    { name: "submitted", title: "Status", type: "text", editing: false },
+                    { name: "marks", title: "Marks", type: "number", editing: true },
+                    {
+                        type: "control", 
+                        editButton: true,
+                        deleteButton: false
+                    }
                 ]
             });
         });
+
+
 
         $(document).on('change', '.select-course', function() {
             const selectedSem = $(this).find(':selected').attr('data-sem');
@@ -695,7 +725,7 @@
 
             // AJAX request to get the assignment data
             $.ajax({
-                url: '{{ route("getExamStudents") }}',
+                url: '{{ route("getExamList") }}',
                 data: { id: id },
                 method: 'GET',
                 success: function(response) {
