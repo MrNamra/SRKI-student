@@ -797,7 +797,7 @@
                     setTimeout(function() {
                         $('.upload-form').find("[name=sub_id]").val(res.subject_id).trigger('change')
                     }, 1000)
-                    $('.upload-form').find("[name=date]").val(res.StartDate+' - '+res.EndDate)
+                    $('.upload-form').find("[name=date]").val(formatDate(res.StartDate)+' - '+formatDate(res.EndDate))
                     
                 },
                 error: function(err) {

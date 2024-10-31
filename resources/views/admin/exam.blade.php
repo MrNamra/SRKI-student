@@ -37,13 +37,13 @@
                 
                 <div class="col-3">
                     <label>Exam Type</label>
-                    <select class="form-control select2 col-12" name="exam">
+                    <select class="form-control select2 col-12" name="examtype">
                         <option>Internal</option>
                         <option>External</option>
                     </select>
                 </div>
                 <div class="col-3">
-                    <select class="form-control select2 col-12 select-course" name="cource_id" id="select-course">
+                    <select class="form-control select2 col-12 select-course" name="course_id" id="select-course">
                         <option selected disabled>Select Course</option>
                         @foreach ($streams as $cource)
                         <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
@@ -137,79 +137,21 @@
                     <th >
                         Sem(Div)
                     </th>
-                    <th>
-                        Project Progress
-                    </th>
                     <th  class="text-center">
                         Time
+                    </th>
+                    <th  class="text-center">
+                        Type
                     </th>
                     <th  class="text-center">
                         Status
                     </th>
                     <th >
+                        Opration
                     </th>
                 </tr>
             </thead>
             <tbody>
-                {{-- <tr>
-                    <td>
-                        #
-                    </td>
-                    <td>
-                        <a>
-                            AdminLTE v3
-                        </a>
-                        <br/>
-                        <small>
-                            Created 01.01.2019
-                        </small>
-                    </td>
-                    <td>
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
-                            </li>
-                            <li class="list-inline-item">
-                                <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar2.png">
-                            </li>
-                            <li class="list-inline-item">
-                                <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar3.png">
-                            </li>
-                            <li class="list-inline-item">
-                                <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar4.png">
-                            </li>
-                        </ul>
-                    </td>
-                    <td class="project_progress">
-                        <div class="progress progress-sm">
-                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: 57%">
-                            </div>
-                        </div>
-                        <small>
-                            57% Complete
-                        </small>
-                    </td>
-                    <td class="project-state">
-                        <span class="badge badge-success">Success</span>
-                    </td>
-                    <td class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#">
-                            <i class="fas fa-folder">
-                            </i>
-                            View
-                        </a>
-                        <a class="btn btn-info btn-sm" href="#">
-                            <i class="fas fa-pencil-alt">
-                            </i>
-                            Edit
-                        </a>
-                        <a class="btn btn-danger btn-sm" href="#">
-                            <i class="fas fa-trash">
-                            </i>
-                            Delete
-                        </a>
-                    </td>
-                </tr> --}}
             </tbody>
         </table>
     </div>
@@ -246,12 +188,19 @@
                 </div>
                 <!-- /.card -->
                 <div class="row col-11 mt-3 ml-3">
-                    <div class="col-12 mb-3">
+                    <div class="col-8 mb-3">
                         <label>Assignment Title</label>
                         <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
                     </div>
+                    <div class="col-4 mb-3">
+                        <label>Type</label>
+                        <select name="examtype" class="form-control"required>
+                            <option value="Internal">Internal</option>
+                            <option value="External">External</option>
+                        <select>
+                    </div>
                     <div class="col-4">
-                        <select class="form-control select2 col-12 select-course" name="cource_id" >
+                        <select class="form-control select2 col-12 select-course" name="course_id" >
                             <option selected disabled>Select Course</option>
                             @foreach ($streams as $cource)
                                 <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
@@ -319,24 +268,6 @@
           </button>
         </div>
         <div class="modal-body">
-          {{-- <table class="table table-striped student-projects" id="jsGrid">
-            <thead>
-                <tr>
-                    <th>En.NO.</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Uploaded At</th>
-                    <th><i class="fas fa-cogs"></i></th>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </thead>
-          </table> --}}
           <div id="jsGrid"></div>
         </div>
         <div class="modal-footer justify-content-between">
@@ -399,27 +330,88 @@
         })
         $('.select2').select2({theme: 'bootstrap4'});
 
-        // $('#dataTable').DataTable({
         $('.projects').DataTable({
             serverSide: true,
             ordering: false,
-            "lengthChange": false,
-            "autoWidth": true,
-            "responsive": true,
+            lengthChange: false,
+            autoWidth: true,
+            responsive: true,
             ajax: {
-            url : '{{route("getExamStudents")}}',
-            dataSrc: 'data'
+                url: '{{ route("getExamStudents") }}',
+                dataSrc: 'data',
             },
             columns: [
-                { data: null, render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Index column
-                { data: 'title' },
-                { data: 'subject' },
-                { data: 'sem' },
-                { data: 'time' },
-                { data: 'status' },
-                { data: null, render: function(data, type, row) { return '<button class="btn btn-sm btn-primary edit-data" data-id="'+data.id+'"><i class="fas fa-pencil-alt"></i> edit</button><br><button class="btn btn-sm btn-danger delete-data" data-id="'+data.id+'"><i class="fas fa-trash"></i> Delete</button><button class="btn btn-sm btn-primary view-data" data-id="'+data.id+'"><i class="fas fa-folder"></i> View</button>'; } } // Action column
+                { 
+                    data: null, 
+                    title: '#', 
+                    className: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Index column
+                    }
+                },
+                { data: 'title', title: 'Title' }, // Title column
+                { data: 'subject.name', title: 'Subject' }, // Subject column
+                {
+                    data: null,
+                    title: 'Sem(Div)',
+                    render: function(data) {
+                        // Combine `sem` from `subject` with `div`
+                        return `${data.subject.sem} (${data.div || ''})`;
+                    }
+                },
+                {
+                    data: null,
+                    title: 'Time',
+                    className: 'text-center',
+                    render: function(data) {
+                        return `${data.StartTime} - ${data.EndTime}`;
+                    }
+                },
+                {
+                    data: null,
+                    title: 'Status',
+                    className: 'text-center',
+                    render: function(data) {
+                        const now = new Date();
+                        const startTime = new Date(data.StartTime);
+                        const endTime = new Date(data.EndTime);
+
+                        if (startTime > now) {
+                            return '<span class="badge badge-warning">Upcoming</span>';
+                        } else if (startTime <= now && endTime > now) {
+                            return '<span class="badge badge-info">Ongoing</span>';
+                        } else {
+                            return '<span class="badge badge-success">Done</sapn>';
+                        }
+                    }
+                },
+                {
+                    data: null,
+                    title: 'examtype',
+                    className: 'text-center',
+                    render: function(data) {
+                        return `${data.examtype	}`;
+                    }
+                },
+                {
+                    data: null,
+                    title: 'Operation',
+                    render: function(data) {
+                        return `
+                            <button class="btn btn-sm btn-primary edit-data" data-id="${data.id}">
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-data" data-id="${data.id}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            <button class="btn btn-sm btn-primary view-data" data-id="${data.id}">
+                                <i class="fas fa-folder"></i> View
+                            </button>`;
+                    }
+                }
             ]
         });
+
         // $(document).on('click', '.view-data', function() {
         //     $('.overlay-modal-xl').show();
         //     $('#modal-xl').modal('show')
@@ -527,7 +519,7 @@
                 type: 'GET',
                 data: {
                     sem: sem,
-                    cource_id: courseDropdown.val(),
+                    course_id: courseDropdown.val(),
                 },
                 success: function(response) {
                     subjectDropdown.empty().append('<option selected disabled>Subject</option>');
@@ -601,7 +593,7 @@
             const formData = new FormData(this);
             formData.append('file', selectedFile);
             $.ajax({
-                url: '{{ route("upload-assignment") }}',
+                url: '{{ route("examCreateOrUpdate") }}',
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -613,15 +605,15 @@
                             icon: 'success',
                             title: "Uploaded Successfully!"
                         })
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
                     } else{
                         Toast.fire({
                             icon: 'error',
-                            title: "Uploading data fail!"
+                            title: response.message || "Uploading data fail!"
                         })
                     }
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
                 },
                 error: function(err) {
                     console.log(err);
@@ -662,7 +654,7 @@
                 if (result.isConfirmed) {
                     var id = $(this).data('id');
                     $.ajax({
-                        url: '{{ route("deleteAssignment") }}',
+                        url: '{{ route("deleteExam") }}',
                         method: 'DELETE',
                         data: {
                             "_token": "{{ csrf_token() }}",
@@ -703,7 +695,8 @@
 
             // AJAX request to get the assignment data
             $.ajax({
-                url: '{{ route("editAssignment", '') }}/' + id,
+                url: '{{ route("getExamStudents") }}',
+                data: { id: id },
                 method: 'GET',
                 success: function(response) {
                     // Reset form and populate with fetched data
@@ -712,17 +705,18 @@
                     $('.update-form input[name="id"]').val(response.id);
                     $('.update-form').attr('action', '{{ url("updateAssignment") }}/' + id);
                     $('.update-form input[name="title"]').val(response.title);
-                    $(".summernote1").summernote("code", response.dec); // Populate summernote
-                    $('.update-form input[name="date"]').val(response.date);
+                    $(".summernote1").summernote("code", response.dec);
+                    $('.update-form input[name="date"]').val(formatDate(response.StartTime)+" - "+formatDate(response.EndTime));
 
                     // Update course, semester, and subject dropdowns
-                    $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
-                    $('.update-form select[name="sem"]').val(response.sem).trigger('change');
+                    $('.update-form select[name="course_id"]').val(response.course_id).trigger('change');
                     $('.update-form select[name="div"]').val(response.div).trigger('change');
+                    $('.update-form select[name="sem"]').val(response.subject.sem).trigger('change');
+                    $('.update-form select[name="examtype"]').val(response.examtype).trigger('change');
                     setTimeout(function() {
                         $('.update-form select[name="sub_id"]').val(response.sub_id).trigger('change');
                     }, 1000);
-                    // $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
+                    // $('.update-form select[name="course_id"]').val(response.course_id).trigger('change');
 
                     // Hide overlay after data is populated
                     $('.overlay').hide();
@@ -741,7 +735,7 @@
             e.preventDefault();
             const formData = new FormData(this);
             $.ajax({
-                url: '{{ route("update-assignment") }}',
+                url: '{{ route("examCreateOrUpdate") }}',
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -772,7 +766,7 @@
                 }
             });
         });
-        $("#search_cource_id").on("change", function() {
+        $("#search_course_id").on("change", function() {
             var selectedData = $(this).select2("data")[0];
             var sem = selectedData ? selectedData.element.dataset.sem : null;
             for(var i=1;i<=sem;i++){
@@ -788,7 +782,7 @@
                 data: formData,
                 success: function(res) {
                     $('.upload-form').find("[name=div]").val(res.div).trigger('change')
-                    $('.upload-form').find("[name=cource_id]").val(res.course_id).trigger('change')
+                    $('.upload-form').find("[name=course_id]").val(res.course_id).trigger('change')
                     $('.upload-form').find("[name=sem]").val(res.sem).trigger('change')
                     setTimeout(function() {
                         $('.upload-form').find("[name=sub_id]").val(res.subject_id).trigger('change')

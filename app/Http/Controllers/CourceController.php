@@ -32,7 +32,7 @@ class CourceController extends Controller
         if($id){
             $res = Subject::find($id);
         }else{
-            $res = Subject::where('course_id', $request->cource_id)->where('sem', $request->sem)->get();
+            $res = Subject::where('course_id', $request->course_id)->where('sem', $request->sem)->get();
         }
         // Prepare the response
         return response()->json($res);

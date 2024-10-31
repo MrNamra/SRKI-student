@@ -247,6 +247,19 @@
     <script src="{{url('/dist/js/adminlte.min.js')}}"></script>
     <!-- Select2 -->
     <script href="{{url('/plugins/select2/js/select2.full.min.js')}}"></script>
+    <script>
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(',', '');
+        }
+    </script>
     @yield('js')
 </body>
 

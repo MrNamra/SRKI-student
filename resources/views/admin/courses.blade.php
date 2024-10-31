@@ -31,17 +31,15 @@
                             <label for="stream">Select Stream</label>
                             <select id="stream" class="form-control select2" name="course_id"
                                 data-placeholder="Select a Cource">
+                                <option value="" selected disabled>Select Stream</option>
                                 @if ($streams)
                                     @foreach ($streams as $stream)
-                                        <option value="{{ $stream->id }}">{{ $stream->name }}</option>
+                                        <option value="{{ $stream->id }}" data-sem="{{ $stream->no_of_sem }}">{{ $stream->name }}</option>
                                     @endforeach
                                 @endif
                             </select>
                             <label for="sem">Select Subject For Sem</label>
                             <select id="sem" class="form-control" name="sem">
-                                @for ($i = 1; $i <= 8; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
                             </select>
                             <label for="Subject">Add Subject</label>
                             <input type="text" id="Subject" class="form-control" name="name"
@@ -177,6 +175,12 @@
             // for select2
             $('.select2').select2();
 
+            $("#stream").on('change', function() {
+                var sem = $(this).select2("data")[0].element.dataset.sem ?? 0;
+                for (var i = 1; i <= sem; i++) {
+                    $("#sem").append('<option value="' + i + '">' + i + '</option>');
+                }
+            })
             $('#dataTable').on('click', '.edit-data', function() {
                 $('.overlay').show();
                 $('#lodingModal').modal('show');

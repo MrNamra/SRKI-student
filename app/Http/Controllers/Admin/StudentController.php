@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cource;
+use App\Models\Exam;
 use App\Models\Stream;
 use App\Models\Student;
 use App\Repositories\AssginamnetRepository;
 use App\Repositories\CourceRepository;
+use App\Repositories\ExamRepository;
 use App\Repositories\Interface\SubjectRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\SubjectRepository as RepositoriesSubjectRepository;
@@ -102,19 +104,5 @@ class StudentController extends Controller
         } catch (Exception $e) {
             return response()->json(['message' => 'Error Getting data: ' . $e->getMessage()], 500);
         }
-    }
-    public function exam(){
-        $streams = Cource::get();
-        return view('admin.exam', ['streams' => $streams]);
-    }
-    public function getStudnets(Request $request){
-        try {
-            $data = $this->studentRepo->getExamStudnetsAndUpadte($request, $request->id);
-            return response()->json($data->original);
-        } catch (Exception $ex) {
-            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
-        }
-        $streams = Cource::get();
-        return view('admin.exam', ['streams' => $streams]);
     }
 }

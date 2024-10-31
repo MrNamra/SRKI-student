@@ -14,5 +14,6 @@ class ExamInfo extends Model
         'exam_id',
         'file_path',
         'marks',
+        'ip',
     ];
 }

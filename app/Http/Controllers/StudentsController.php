@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Interface\StudentRepositoryInterface;
 use App\Models\AssignmentInfo;
 use App\Models\Cource;
 use App\Repositories\StudentRepository;
@@ -18,11 +19,16 @@ class StudentsController extends Controller
 
     public function __construct(StudentRepository $student)
     {
+        if(!empty(session('exam'))){
+            return redirect()->route('student.exam');
+        }
         $this->studentRepo = $student;
     }
     public function loginpage() {
-        if(Auth::guard('student')->check()){
+        if(Auth::guard('student')->check() && session('lab')) {
             return redirect()->route('student.dashboard');
+        }elseif(Auth::guard('student')->check() && session('exam')){
+            return redirect()->route('student.exam');
         }
         return view('welcome');
     }
@@ -41,7 +47,8 @@ class StudentsController extends Controller
     }
     public function logout() {
         Auth::guard('student')->logout();
-        session()->flush();
+        session()->forget('lab');
+        session()->forget('exam');
         return redirect()->route('student.login');
     }
     public function index(){
@@ -77,8 +84,5 @@ class StudentsController extends Controller
     public function uploadedAssignment() {
         $results = $this->studentRepo->uploadedAssignment();
         return view('student.assignment', ['results' => $results]);
-    }
-    public function examLogin() {
-        return view('student.exam');
     }
 }

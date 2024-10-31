@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('exam_id')->references('id')->on('exams')->onDelete('cascade')->onUpdate('cascade');
             $table->longText('file_path');
             $table->double('marks')->default(0);
+            $table->double('ip')->nullable();
             $table->timestamps();
         });
     }

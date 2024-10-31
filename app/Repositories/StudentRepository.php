@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Interface\StudentRepositoryInterface;
 use App\Models\AssignmentInfo;
 use App\Models\Cource;
+use App\Models\Exam;
+use App\Models\ExamInfo;
 use App\Models\LabSchedule;
 use App\Models\Student;
 use Exception;
@@ -195,7 +197,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $student = Auth::guard('student')->user();
         $customFileName = $session->title . '.' . $file->getClientOriginalExtension();
         $course = Cource::find($session->course_id)->name;
-        $path = 'assignments/' . $course . '/' . $session->sem . '/' . $session->div . '/' . $student->enrollment_no . '/' . $session->subject_name;
+        $path = 'assignments/' . $course . '/' . $session->sem . '/' . $session->div . '/' . $student->enrollment_no . '/' . $session->subject_name . '/';
 
         // Check if an assignment already exists for this student
         $assignment_id = $id ?? $session->id;
@@ -220,7 +222,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
                 }
 
                 // Create a new record and store the new file
-                $assignment->update(['file_path' => $path]);
+                $assignment->update(['file_path' => $path.$customFileName]);
                 return $file->storeAs($path, $customFileName, 'public');
             }
         } else {
@@ -232,7 +234,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             $assignment->id = $student->id;
             $assignment->en_no = $student->enrollment_no;
             $assignment->assingment_id = $assignment_id;
-            $assignment->file_path = $path;
+            $assignment->file_path = $path.$customFileName;
             $assignment->save();
 
             // Store the new file
@@ -245,18 +247,18 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         auth()->guard('student')->user();
         return $allLab;
     }
-    public function getExamStudnetsAndUpadte($request, $id = null) {
-        $data = LabSchedule::with('assignment', 'subject')->find($id);
-        if (!$data) {
-            return response()->json(['error' => 'Lab schedule not found'], 404);
+    public function getExamStudnetsOrUpadte($request, $id = null) {
+        $exam = Exam::with('assignment', 'subject')->find($id);
+        if (!$exam) {
+            return response()->json(['error' => 'Exam not found'], 404);
         }
 
         // Fetch submitted assignments
-        $submittedAssignments = AssignmentInfo::where('assingment_id', $data->id)->get();
+        $submittedExams = ExamInfo::where('exam_id', $exam->id)->get();
 
         // Build the query for all students
-        $query = Student::where('div', $data->div)
-                        ->where('sem', $data->subject->sem);
+        $query = Student::where('div', $exam->div)
+                        ->where('sem', $exam->subject->sem);
 
         // Apply search filter if present
         if ($request->has('search') && !empty($request->search['value'])) {
@@ -276,14 +278,14 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $students = $query->skip($start)->take($length)->get();
 
         // Prepare student details
-        $studentDetails = $students->map(function ($student) use ($submittedAssignments) {
-            $assignmentInfo = $submittedAssignments->firstWhere('en_no', $student->enrollment_no);
+        $studentDetails = $students->map(function ($student) use ($submittedExams) {
+            $examInfo = $submittedExams->firstWhere('en_no', $student->enrollment_no);
             
             return [
                 'en_no' => $student->enrollment_no,
                 'name' => $student->name,
-                'created_at' => $assignmentInfo ? $assignmentInfo->created_at->format('d-m-Y h:i A') : "N/A",
-                'submitted' => $assignmentInfo ? '<span class="badge badge-success">done</span>' : '<span class="badge badge-warning">pending</span>',
+                'created_at' => $examInfo ? $examInfo->created_at->format('d-m-Y h:i A') : "N/A",
+                'submitted' => $examInfo ? '<span class="badge badge-success">done</span>' : '<span class="badge badge-warning">pending</span>',
             ];
         })->toArray();
 

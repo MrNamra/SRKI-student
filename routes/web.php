@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AssginamnetController;
+use App\Http\Controllers\admin\ExamController;
 use App\Http\Controllers\Admin\LabController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TimetableController;
 use App\Http\Controllers\CourceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Middleware\InactivityLogout;
@@ -15,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StudentsController::class, 'loginpage'])->name('student.login');
 Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
-Route::get('exam', [StudentsController::class, 'examLogin'])->name('student.exam');
+Route::get('exam', [ExamsController::class, 'index'])->name('student.exam');
+Route::post('exam', [ExamsController::class, 'login'])->name('student.exam.login');
+Route::post('examsubmit', [ExamsController::class, 'store'])->name('student.exam.submit');
 
 Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('student')->group(function () {
     Route::post('/studentLogout', [StudentsController::class, 'logout'])->name('student.logout');
@@ -53,8 +57,10 @@ Route::middleware('auth')->group(function () {
     Route::post('courses', [CourceController::class, 'addcourse'])->name('add-course');
     Route::post('addSub', [CourceController::class, 'addSubject'])->name('add-subject');
     
-    Route::get('exams', [StudentController::class, 'exam'])->name('exam');
-    Route::get('exam-students', [StudentController::class, 'getStudnets'])->name('getExamStudents');
+    Route::get('exams', [ExamController::class, 'exam'])->name('exam');
+    Route::post('exams', [ExamController::class, 'examStore'])->name('examCreateOrUpdate');
+    Route::get('examlist', [ExamController::class, 'getExamsList'])->name('getExamStudents');
+    Route::delete('exams', [ExamController::class, 'distory'])->name('deleteExam');
     
     Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');
     Route::post('timetable', [TimetableController::class, 'store'])->name('add-timetable');
