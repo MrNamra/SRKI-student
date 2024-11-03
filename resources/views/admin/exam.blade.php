@@ -45,8 +45,8 @@
                 <div class="col-3">
                     <select class="form-control select2 col-12 select-course" name="course_id" id="select-course">
                         <option selected disabled>Select Course</option>
-                        @foreach ($streams as $cource)
-                        <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                        @foreach ($streams as $course)
+                        <option value="{{$course->id}}" data-sem="{{$course->no_of_sem}}">{{$course->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -202,8 +202,8 @@
                     <div class="col-4">
                         <select class="form-control select2 col-12 select-course" name="course_id" >
                             <option selected disabled>Select Course</option>
-                            @foreach ($streams as $cource)
-                                <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                            @foreach ($streams as $course)
+                                <option value="{{$course->id}}" data-sem="{{$course->no_of_sem}}">{{$course->name}}</option>
                             @endforeach
                         </select>
                     </div>

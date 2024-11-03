@@ -23,10 +23,10 @@
                 <option value="Friday">Friday</option>
                 <option value="Saturday">Saturday</option>
             </select>
-            <select class="form-control select2 col-3 ml-2" id="search_cource_id" name="cource_id">
+            <select class="form-control select2 col-3 ml-2" id="search_course_id" name="course_id">
                 <option selected disabled>Select Course</option>
-                @foreach ($cources as $cource)
-                    <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                @foreach ($courses as $course)
+                    <option value="{{$course->id}}" data-sem="{{$course->no_of_sem}}">{{$course->name}}</option>
                 @endforeach
             </select>
             <select class="form-control select2 col-1" id="search_sem" name="sem">
@@ -67,10 +67,10 @@
                     <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
                 </div>
                 <div class="col-4">
-                    <select class="form-control select2 col-12 select-course" name="cource_id" id="select-course">
+                    <select class="form-control select2 col-12 select-course" name="course_id" id="select-course">
                         <option selected disabled>Select Course</option>
-                        @foreach ($cources as $cource)
-                        <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                        @foreach ($courses as $course)
+                        <option value="{{$course->id}}" data-sem="{{$course->no_of_sem}}">{{$course->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -328,10 +328,10 @@
                         <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
                     </div>
                     <div class="col-4">
-                        <select class="form-control select2 col-12 select-course" name="cource_id" >
+                        <select class="form-control select2 col-12 select-course" name="course_id" >
                             <option selected disabled>Select Course</option>
-                            @foreach ($cources as $cource)
-                                <option value="{{$cource->id}}" data-sem="{{$cource->no_of_sem}}">{{$cource->name}}</option>
+                            @foreach ($courses as $course)
+                                <option value="{{$course->id}}" data-sem="{{$course->no_of_sem}}">{{$course->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -531,7 +531,7 @@
                 type: 'GET',
                 data: {
                     sem: sem,
-                    cource_id: courseDropdown.val(),
+                    course_id: courseDropdown.val(),
                 },
                 success: function(response) {
                     subjectDropdown.empty().append('<option selected disabled>Subject</option>');
@@ -720,13 +720,13 @@
                     $('.update-form input[name="date"]').val(response.date);
 
                     // Update course, semester, and subject dropdowns
-                    $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
+                    $('.update-form select[name="course_id"]').val(response.course_id).trigger('change');
                     $('.update-form select[name="sem"]').val(response.sem).trigger('change');
                     $('.update-form select[name="div"]').val(response.div).trigger('change');
                     setTimeout(function() {
                         $('.update-form select[name="sub_id"]').val(response.sub_id).trigger('change');
                     }, 1000);
-                    // $('.update-form select[name="cource_id"]').val(response.cource_id).trigger('change');
+                    // $('.update-form select[name="course_id"]').val(response.course_id).trigger('change');
 
                     // Hide overlay after data is populated
                     $('.overlay').hide();
@@ -776,7 +776,7 @@
                 }
             });
         });
-        $("#search_cource_id").on("change", function() {
+        $("#search_course_id").on("change", function() {
             var selectedData = $(this).select2("data")[0];
             var sem = selectedData ? selectedData.element.dataset.sem : null;
             for(var i=1;i<=sem;i++){
@@ -792,7 +792,7 @@
                 data: formData,
                 success: function(res) {
                     $('.upload-form').find("[name=div]").val(res.div).trigger('change')
-                    $('.upload-form').find("[name=cource_id]").val(res.course_id).trigger('change')
+                    $('.upload-form').find("[name=course_id]").val(res.course_id).trigger('change')
                     $('.upload-form').find("[name=sem]").val(res.sem).trigger('change')
                     setTimeout(function() {
                         $('.upload-form').find("[name=sub_id]").val(res.subject_id).trigger('change')

@@ -18,7 +18,7 @@
             @error('sem')
                 <p>{{ $message }}</p>
             @enderror
-            @error('cource_id')
+            @error('course_id')
                 <p>{{ $message }}</p>
             @enderror
             @if(session('success'))
@@ -43,7 +43,7 @@
                 <tr class="thead-dark">
                     <th scope="col">En NO.</th>
                     <th scope="col">name</th>
-                    <th scope="col">Cource Name</th>
+                    <th scope="col">Course Name</th>
                     <th scope="col">Sem</th>
                     <th scope="col">Div</th>
                     <th scope="col">IP</th>
@@ -140,7 +140,7 @@ Note:- press any button below this <b>at your own risk</b> beacause after press 
             </div>
             <input type="text" class="form-control" name="ip" data-inputmask="'alias': 'ip'" data-mask>
             </div>
-            <label class="control-label">Cource</label>
+            <label class="control-label">Course</label>
             <select class="form-control select2" name="course_id" data-placeholder="Select a Corce">
               @if ($streams)
                 @foreach ($streams as $stream)

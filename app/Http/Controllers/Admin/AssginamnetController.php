@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cource;
+use App\Models\course;
 use App\Repositories\AssginamnetRepository;
-use App\Repositories\CourceRepository;
+use App\Repositories\courseRepository;
 use App\Repositories\StudentRepository;
 use Carbon\Carbon;
 use Exception;
@@ -20,8 +21,8 @@ class AssginamnetController extends Controller
     }
     public function index(){
         try{
-            $cources = Cource::get();
-            return view('admin.assignment', ['cources' => $cources]);
+            $courses = Cource::get();
+            return view('admin.assignment', ['courses' => $courses]);
         }catch(Exception $ex){
             dd($ex);
         }

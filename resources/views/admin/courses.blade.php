@@ -30,7 +30,7 @@
                             @csrf
                             <label for="stream">Select Stream</label>
                             <select id="stream" class="form-control select2" name="course_id"
-                                data-placeholder="Select a Cource">
+                                data-placeholder="Select a Course">
                                 <option value="" selected disabled>Select Stream</option>
                                 @if ($streams)
                                     @foreach ($streams as $stream)
@@ -59,8 +59,8 @@
                     <thead>
                         <tr class="thead-dark">
                             <th scope="col">#</th>
-                            <th scope="col">Cource code</th>
-                            <th scope="col">Cource Name</th>
+                            <th scope="col">Course code</th>
+                            <th scope="col">Course Name</th>
                             <th scope="col">Sem</th>
                             <th scope="col">Sub. Name</th>
                             <th scope="col"><i class="fas fa-cogs"></i></th>
@@ -104,8 +104,8 @@
                     <div class="modal-body">
                         @csrf
                         <input type="hidden" name="id" placeholder="Name" />
-                        <label class="control-label">Cource</label>
-                        <select class="form-control select2" name="cource_id" data-placeholder="Select a Corce">
+                        <label class="control-label">Course</label>
+                        <select class="form-control select2" name="course_id" data-placeholder="Select a Corce">
                             @if ($streams)
                                 @foreach ($streams as $stream)
                                     <option value="{{ $stream->id }}">{{ $stream->name }}</option>
@@ -234,7 +234,7 @@
                         data: 'subject_code'
                     },
                     {
-                        data: 'cource_name'
+                        data: 'course_name'
                     },
                     {
                         data: 'sem'

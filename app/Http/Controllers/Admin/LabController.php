@@ -23,7 +23,7 @@ class LabController extends Controller
             'div' => 'required',
             'date' => 'required',
             'file' => 'exclude_if:file,null|file',
-            'cource_id' => 'required|numeric',
+            'course_id' => 'required|numeric',
             'sem' => 'required|numeric',
         ]);
         try{
@@ -57,7 +57,7 @@ class LabController extends Controller
             'div' => 'required',
             'date' => 'required',
             'file' => 'nullable|file',
-            'cource_id' => 'required|numeric',
+            'course_id' => 'required|numeric',
             'sem' => 'required|numeric',
         ]);
         try{

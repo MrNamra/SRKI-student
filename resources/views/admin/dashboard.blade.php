@@ -19,7 +19,7 @@
                 <div class="inner">
                   <h3>{{$TotalCources}}</h3>
   
-                  <p>Total Cource</p>
+                  <p>Total Course</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-bag"></i>

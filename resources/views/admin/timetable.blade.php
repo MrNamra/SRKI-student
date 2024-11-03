@@ -13,7 +13,7 @@
                             @csrf
                             <label for="day">Day</label>
                             <select id="day" class="form-control select2" name="day"
-                                data-placeholder="Select a Cource">
+                                data-placeholder="Select a Course">
                                 <option selected disabled>Select Day</option>
                                 <option value="Monday">Monday</option>
                                 <option value="Tuesday">Tuesday</option>
@@ -71,7 +71,7 @@
                             <tr class="thead-dark">
                                 <th scope="col">Day</th>
                                 <th scope="col">Sub. Name</th>
-                                <th scope="col">Cource Name</th>
+                                <th scope="col">Course Name</th>
                                 <th scope="col">Sem</th>
                                 <th scope="col">Div</th>
                                 <th scope="col">Time</th>
@@ -114,7 +114,7 @@
                         <div class="mb-3">
                             <label for="course" class="form-label">course</label>
                             <select id="mcourse" class="form-control" name="course_id" required>
-                                <option selected disabled>Select Cource</option>
+                                <option selected disabled>Select Course</option>
                                 @if ($courses)
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}">{{ $course->name }}</option>
@@ -362,7 +362,7 @@
                     type: 'GET',
                     data: {
                         sem: sem,
-                        cource_id: courseDropdown.val(),
+                        course_id: courseDropdown.val(),
                     },
                     success: function(response) {
                         subjectDropdown.empty().append(
@@ -440,7 +440,7 @@
                     type: 'GET',
                     data: {
                         sem: sem,
-                        cource_id: courseDropdown.val(),
+                        course_id: courseDropdown.val(),
                     },
                     success: function(response) {
                         subjectDropdown.empty().append(
