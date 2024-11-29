@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Interface\StudentRepositoryInterface;
 use App\Models\AssignmentInfo;
-use App\Models\Cource;
 use App\Repositories\StudentRepository;
-use ErrorException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,5 +81,17 @@ class StudentsController extends Controller
     public function uploadedAssignment() {
         $results = $this->studentRepo->uploadedAssignment();
         return view('student.assignment', ['results' => $results]);
+    }
+    public function downlaodAssignment($id) {
+        try{
+            $path = $this->studentRepo->downlaodAssignment($id);
+            if ($path && Storage::disk('public')->exists($path)) {
+                return Storage::disk('public')->download($path);
+            }
+            return response()->json(["status" => false, "error" => "File Not Found!"], 404);
+        } catch (Exception $e) {
+            Log::info("ID:-" . time() . "\nError submitting assignment: " . $e->getMessage() . "\nLab ID:- " . session("lab")->id . "\nStudentID:- " . auth()->guard('student')->user()->enrollment_no);
+            return response()->json(["status" => false, "error" => "id: " . time() . "\nError from server please try again or contact faculty!"], 500);
+        }
     }
 }

@@ -123,7 +123,7 @@ class ExamRepository extends BaseRepository
         $exam = ExamInfo::where('exam_id', $exam_id)
             ->where('en_no', $student->enrollment_no)
             ->first();
-dd($path.$customFileName);
+
         if ($exam) {
             // If the exam exists, get the old file path and its extension
             $oldFilePath = $exam->file_path;
@@ -160,5 +160,84 @@ dd($path.$customFileName);
             // Store the new file
             return $file->storeAs($path, $customFileName, 'public');
         }
+    }
+    public function getExamsCandidets($request, $id) {
+        $data = Exam::with('subject')->find($id);
+        if (!$data) {
+            return response()->json(['error' => 'Exam not found'], 404);
+        }
+    
+        // Fetch submitted exam info
+        $submittedExamInfo = ExamInfo::where('exam_id', $data->id)->get();
+    
+        // Build the query for all students
+        $query = Student::where('div', $data->div)
+                        ->where('sem', $data->subject->sem);
+    
+        // Apply search filter if present
+        if (!empty($request->search['en_no'])) {
+            $query->where('enrollment_no', 'like', "%{$request->search['en_no']}%");
+        }
+        if (!empty($request->search['name'])) {
+            $query->where('name', 'like', "%{$request->search['name']}%");
+        }
+    
+        // Get total records before applying pagination
+        $totalRecords = $query->count();
+    
+        // Apply pagination
+        $start = $request->start ?? 0;
+        $length = $request->length ?? 10;
+        $students = $query->skip($start)->take($length)->get();
+    
+        // Prepare student details
+        $studentDetails = $students->map(function ($student) use ($submittedExamInfo) {
+            $examInfo = $submittedExamInfo->firstWhere('en_no', $student->enrollment_no);
+            
+            // Determine the status based on marks and file_path
+            if ($examInfo) {
+                $marks = $examInfo->marks;
+                $filePath = $examInfo->file_path; // Assuming this field exists in ExamInfo
+    
+                if ($marks > 0 && !is_null($filePath)) {
+                    $submittedStatus = '<span class="badge badge-success">Submitted</span>';
+                } elseif ($marks == 0) {
+                    $submittedStatus = '<span class="badge badge-warning">Pending</span>';
+                } else {
+                    $submittedStatus = '<span class="badge badge-warning">Wait for file</span>';
+                }
+            } else {
+                $submittedStatus = '<span class="badge badge-warning">Pending</span>'; // No exam info means pending
+            }
+    
+            return [
+                'en_no' => $student->enrollment_no,
+                'name' => $student->name,
+                'marks' => $examInfo ? $examInfo->marks : "N/A",
+                'submitted' => $submittedStatus,
+            ];
+        })->toArray();
+    
+        // Return response with filtered data
+        return response()->json([
+            'draw' => intval($request->draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $studentDetails,
+        ]);
+    }
+    public function updateCandidetsMarks($request) {
+        $exam = ExamInfo::where('exam_id', $request->id)
+                        ->where('en_no', $request->en_no);
+        if($exam->first()){
+            $exam->update(['marks' => $request->marks]);
+            return response()->json(['status' => true, 'message' => 'Marks updated successfully']);
+        }
+        ExamInfo::create([
+            'exam_id' => $request->id,
+            'en_no' => $request->en_no,
+            'marks' => $request->marks
+        ]);
+        return response()->json(['status' => true, 'message' => 'Marks updated successfully Wait for File']);
     }
 }

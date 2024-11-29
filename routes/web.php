@@ -26,6 +26,7 @@ Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('studen
     Route::get('/dashboard', [StudentsController::class, 'index'])->name('student.dashboard');
     Route::post('/dashboard', [StudentsController::class, 'submitAssignment'])->name('upload.assignment');
     Route::get('/uploaded', [StudentsController::class, 'uploadedAssignment'])->name('uploaded.assignment');
+    Route::get('/downloadAssignment/{id}', [StudentsController::class, 'downlaodAssignment'])->name('download.assignment');
     Route::get('/wow', function () { session(['lastActivity' => time()]); return response()->json(['success' => true]); })->name('wow');
 });
 
@@ -59,7 +60,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('exams', [ExamController::class, 'exam'])->name('exam');
     Route::post('exams', [ExamController::class, 'examStore'])->name('examCreateOrUpdate');
-    Route::get('examlist', [ExamController::class, 'getExamsList'])->name('getExamStudents');
+    Route::get('examlist', [ExamController::class, 'getExamsList'])->name('getExamList');
+    Route::get('examcandidets', [ExamController::class, 'getExamsCandidets'])->name('getExamCandidets');
+    Route::post('examcandidets', [ExamController::class, 'updateCandidetsMarks'])->name('updateMarks');
     Route::delete('exams', [ExamController::class, 'distory'])->name('deleteExam');
     
     Route::get('timetable', [TimetableController::class, 'index'])->name('timetable');

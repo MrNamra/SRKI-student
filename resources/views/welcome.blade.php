@@ -47,7 +47,7 @@
         })
         $("#login").on('submit', function(e){
             e.preventDefault();
-            $('.btn-info').attr('disabled', 'disabled');
+            $('.btn').attr('disabled', 'disabled');
             if($("#en_no").val() == ""){
                 Toast.fire({
                     icon: 'warning',
@@ -94,7 +94,7 @@
                 });
             }
             setTimeout(function(){
-                $('.btn-info').removeAttr('disabled');
+                $('.btn').removeAttr('disabled');
             }, 2000)
         })
     });

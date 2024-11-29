@@ -97,4 +97,21 @@ class ExamController extends Controller
             return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
         }
     }
+    public function getExamsCandidets(Request $request) {
+        try{
+            $id = $request->id;
+            $data = $this->examRepo->getExamsCandidets($request, $id);
+            return response()->json($data->original);
+        }catch(Exception $ex){
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
+    }
+    public function updateCandidetsMarks(Request $request) {
+        try{
+            $data = $this->examRepo->updateCandidetsMarks($request);
+            return response()->json($data->original);
+        }catch(Exception $ex){
+            return response()->json(['status' => false, 'message' => $ex->getMessage()], 500);
+        }
+    }
 }
