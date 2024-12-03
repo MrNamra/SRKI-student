@@ -98,7 +98,7 @@
             <div class="row col-11 mt-3 ml-3">
                 <div class="col-12">
                     <div class="form-group">
-                        <label>Start & End Date and time range:</label>
+                        <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -359,7 +359,7 @@
                 <div class="row col-11 mt-3 ml-3">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Start & End Date and time range:</label>
+                            <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -446,7 +446,7 @@
             timePicker: true,
             timePickerIncrement: 10,
             locale: {
-                format: 'MM/DD/YYYY hh:mm A'
+                format: 'DD/MM/YYYY hh:mm A'
             }
         })
         $('.select2').select2({theme: 'bootstrap4'});
@@ -791,14 +791,29 @@
                 method: 'GET',
                 data: formData,
                 success: function(res) {
+                    $('.reservationtime').daterangepicker({
+                        timePicker: true,
+                        timePickerIncrement: 10,
+                        locale: {
+                            format: 'DD/MM/YYYY hh:mm A'
+                        },
+                        startDate: moment(res.StartDate, 'YYYY-MM-DD HH:mm:ss').set({
+                            'year': new Date().getFullYear(),
+                            'month': new Date().getMonth(),
+                            'date': new Date().getDate()
+                        }),
+                        endDate: moment(res.EndDate, 'YYYY-MM-DD HH:mm:ss').set({
+                            'year': new Date().getFullYear(),
+                            'month': new Date().getMonth(),
+                            'date': new Date().getDate()
+                        })
+                    });
                     $('.upload-form').find("[name=div]").val(res.div).trigger('change')
                     $('.upload-form').find("[name=course_id]").val(res.course_id).trigger('change')
                     $('.upload-form').find("[name=sem]").val(res.sem).trigger('change')
                     setTimeout(function() {
                         $('.upload-form').find("[name=sub_id]").val(res.subject_id).trigger('change')
                     }, 1000)
-                    $('.upload-form').find("[name=date]").val(formatDate(res.StartDate)+' - '+formatDate(res.EndDate))
-                    
                 },
                 error: function(err) {
                     console.log(err);

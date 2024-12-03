@@ -64,7 +64,7 @@
                     @foreach ($results as $result)
                         @if(session('lab')->id != $result->id)
                             <div class="card @if(!empty($result->assignment)) card-success @else card-danger @endif collapsed-card">
-                                <div class="card-header">
+                                <div class="card-header" data-card-widget="collapse">
                                     <h3 class="card-title">{{$i++.": ".$result->title}}</h3>
 
                                     <div class="card-tools">
@@ -79,7 +79,7 @@
                                     @if(!empty($result->assignment))
                                         hurrayy! Your this assignment is successfully submitted
                                         <div class="float-right">
-                                            <a href="#" data-id="{{ $result->assignment->id }}" class="btn btn-light mb-3 Download">
+                                            <a href="{{ route('download.assignment', $result->assignment->id) }}" target="_blank" data-id="{{ $result->assignment->id }}" class="btn btn-light mb-3 Download">
                                                 <i class="fas fa-download"></i> Download File
                                             </a>
                                         </div>
@@ -115,35 +115,6 @@
                 showConfirmButton: false,
                 timer: 3000
             })
-            $('#Download').on('click', function(event) {
-                event.preventDefault();
-                $(this).data('id');
-
-                $.ajax({
-                    url: '',
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: "Submited Successfully!"
-                        })
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                    },
-                    error: function(err) {
-                        $("#submit-all").removeAttr('disabled');
-                        console.log(err);
-                        Toast.fire({
-                            icon: 'error',
-                            title: err.responseJSON.error ? err.responseJSON.error : err
-                                .responseJSON.message
-                        })
-                    }
-                });
-            });
             $(".upload").on('click', function() {
                 var id = $(this).data('id');
                 $("#file-" + id).click();

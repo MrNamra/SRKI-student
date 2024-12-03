@@ -167,7 +167,7 @@
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
                                 </div>
                                 <input type="text" class="form-control float-right reservationtime" name="date"
-                                    id="reservationtime">
+                                    id="mreservationtime">
                             </div>
                             <!-- /.input group -->
                         </div>
@@ -307,7 +307,18 @@
                                     $('#editForm').find('[name="name"]').val(res.name);
                                     $('#editForm').find('[name="course_id"]').val(res.course_id);
                                     $('#editForm').find('[name="sem"]').val(res.sem).trigger('change');
-                                    $('#editForm').find('[name="date"]').val(rowData.time);
+                                    var timeParts = rowData.time.split(' - ');
+                                    var startDate = moment(timeParts[0], 'MM/DD/YYYY hh:mm A');
+                                    var endDate = moment(timeParts[1], 'MM/DD/YYYY hh:mm A');
+                                    $('.reservationtime').daterangepicker({
+                                        timePicker: true,
+                                        timePickerIncrement: 10,
+                                        locale: {
+                                            format: 'MM/DD/YYYY hh:mm A'
+                                        },
+                                        startDate: startDate,
+                                        endDate: endDate
+                                    });
                                     $('#editForm').find('[name="day"]').val(rowData.day);
                                     setTimeout(function() {
                                         $('#editForm').find('[name="subject_id"]').val(rowData.id);
@@ -358,7 +369,7 @@
                 const subjectDropdown = $("#Subject");
 
                 $.ajax({
-                    url: '{{ route('getSubject') }}',
+                    url: '{{ route("getSubject") }}',
                     type: 'GET',
                     data: {
                         sem: sem,

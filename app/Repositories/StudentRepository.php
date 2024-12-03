@@ -129,7 +129,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     public function promoteSudents(){
         DB::beginTransaction();
         try {
-            for($i = 8; $i >= 1; $i--){
+            for($i = 9; $i >= 1; $i--){
                 $students = Student::with('course')->with('assignment')->where('sem', $i)->get();
                 if($students->isNotEmpty() && $students[0]->course->no_of_sem == $i){
                     foreach($students as $student){
@@ -173,6 +173,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         ? $_SERVER['HTTP_CLIENT_IP']
         : (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) 
         ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+
         if($ip != $student->ip) {
             return ['error' => true, 'message' => 'Access Deny!'];
         }
@@ -182,7 +183,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
                         ->where('lab_schedules.div', '=', DB::raw('students.div'))
                         ->where('lab_schedules.StartTime', '<=', now())
                         ->where('lab_schedules.EndTime', '>=', now())
-                        ->select('lab_schedules.*', 'subjects.*', 'subjects.name AS subject_name', 'students.*')
+                        ->select('lab_schedules.id AS lab_id', 'lab_schedules.*', 'subjects.id AS subject_id', 'subjects.name AS subject_name', 'subjects.*', 'students.*')
                         ->first();
         if(!$lab) {
             return ['error' => true, 'message' => 'Lab Is Not Schedule!'];
@@ -227,8 +228,8 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             }
         } else {
             $lab = LabSchedule::find($assignment_id);
-            if($assignment_id != session('lab')->sub_id)
-                return Throw new Exception('Invalid Assignment');
+            // if($assignment_id != session('lab')->sub_id)
+            //     return Throw new Exception('Invalid Assignment');
             // If it doesn't exist, create a new record
             $assignment = new AssignmentInfo();
             $assignment->id = $student->id;
@@ -296,5 +297,12 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             'recordsFiltered' => $totalRecords,
             'data' => $studentDetails,
         ]);
+    }
+    public function downlaodAssignment($id) {
+        $assignmentPath = AssignmentInfo::where('en_no', auth()->guard('student')->user()->enrollment_no)->where('id', $id)->first();
+        if(!$assignmentPath){
+            return false;
+        }
+        return $assignmentPath->file_path;
     }
 }

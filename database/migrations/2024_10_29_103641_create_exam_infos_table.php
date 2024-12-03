@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('en_no');
             $table->foreign('en_no')->references('enrollment_no')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('exam_id')->references('id')->on('exams')->onDelete('cascade')->onUpdate('cascade');
-            $table->longText('file_path');
+            $table->longText('file_path')->nullable();
             $table->double('marks')->default(0);
-            $table->double('ip')->nullable();
+            $table->string('ip')->nullable();
             $table->timestamps();
         });
     }

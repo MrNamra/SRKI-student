@@ -32,7 +32,7 @@
             <div class="row col-11 mt-3 ml-3">
                 <div class="col-9 mb-3">
                     <label>Exam Title</label>
-                    <input type="text" name="title" class="form-control" placeholder="Assignment Title" required />
+                    <input type="text" name="title" class="form-control" placeholder="Exam Title" required />
                 </div>
                 
                 <div class="col-3">
@@ -74,7 +74,7 @@
             <div class="row col-11 mt-3 ml-3">
                 <div class="col-12">
                     <div class="form-group">
-                        <label>Start & End Date and time range:</label>
+                        <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -231,7 +231,7 @@
                 <div class="row col-11 mt-3 ml-3">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Start & End Date and time range:</label>
+                            <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -258,9 +258,6 @@
 <div class="modal fade" id="modal-xl">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-          {{-- <div class="overlay overlay-modal-xl">
-              <i class="fas fa-2x fa-sync fa-spin"></i>
-          </div> --}}
         <div class="modal-header">
           <h4 class="modal-title">Exam Infomation</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -499,6 +496,26 @@
                         }).fail(function(xhr, status, error) {
                             console.error("Update failed:", xhr.responseText);
                         });
+                    },
+                    updateItem: function(item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: '{{ route("updateMarks") }}',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                id: id,
+                                en_no: item.en_no,
+                                marks: item.marks
+                            },
+                            dataType: "json"
+                        }).then(function(response) {
+                            if(response.status) {
+                                toastr.success('Marks updated successfully');
+                                $("#jsGrid").jsGrid("loadData");
+                            } else {
+                                toastr.error('Error updating marks');
+                            }
+                        });
                     }
                 },
 
@@ -731,12 +748,20 @@
                 success: function(response) {
                     // Reset form and populate with fetched data
                     $('.update-form').trigger('reset');
-                    console.log(response);
                     $('.update-form input[name="id"]').val(response.id);
                     $('.update-form').attr('action', '{{ url("updateAssignment") }}/' + id);
                     $('.update-form input[name="title"]').val(response.title);
                     $(".summernote1").summernote("code", response.dec);
-                    $('.update-form input[name="date"]').val(formatDate(response.StartTime)+" - "+formatDate(response.EndTime));
+                    $('.update-form input[name="date"]').daterangepicker({
+                        timePicker: true,
+                        timePickerIncrement: 10,
+                        locale: {
+                            format: 'DD/MM/YYYY hh:mm A'
+                        },
+                        startDate: moment(response.StartTime, 'YYYY-MM-DD HH:mm:ss'),
+                        endDate: formatDate(response.EndTime, 'YYYY-MM-DD HH:mm:ss')
+                    });
+                    // $('.update-form input[name="date"]').val(formatDate(response.StartTime)+" - "+formatDate(response.EndTime));
 
                     // Update course, semester, and subject dropdowns
                     $('.update-form select[name="course_id"]').val(response.course_id).trigger('change');

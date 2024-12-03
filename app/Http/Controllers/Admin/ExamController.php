@@ -43,7 +43,7 @@ class ExamController extends Controller
                 if ($request->hasFile('file')) {
                     $file = $request->file('file');
                     $originalName = $file->getClientOriginalName();
-                    $filePath = 'uploads/exam/' . $originalName;
+                    $filePath = 'uploads/exam/'. $request->title. '-' . $originalName;
                 
                     // Check if file already exists
                     if (Storage::disk('public')->exists($filePath)) {
@@ -51,7 +51,7 @@ class ExamController extends Controller
                     }
                 
                     // Store the file
-                    $filePath = $file->storeAs('uploads/exam', $originalName, 'public');
+                    $filePath = $file->storeAs('uploads/exam', $request->title. '-' . $originalName, 'public');
                 }
                 
                 $data = $request->except(['_token', 'date', 'file']);
