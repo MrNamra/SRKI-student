@@ -158,7 +158,7 @@
                 type: 'GET',
                 data: {
                     sem: sem,
-                    cource_id: $("#report-form [name=course_id]").val(),
+                    course_id: $("#report-form [name=course_id]").val(),
                 },
                 success: function(response) {
                     $("#subject").empty().append('<option selected disabled>Select Subject</option>');

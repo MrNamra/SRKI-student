@@ -102,12 +102,12 @@ class ExamRepository extends BaseRepository
                         ->select('exams.*', 'subjects.*', 'subjects.name AS subject_name', 'students.*')
                         ->first();
         if(!$exam) {
-            return ['error' => true, 'message' => 'Exam Is Not Started!'];
+            return ["success" => false, 'message' => 'Exam Is Not Started!'];
         }
         Auth::guard('student')->login($student);
         session()->put('exam', $exam);
 
-        return true;
+        return ["success" => true, 'message' => 'Login Successful!'];
     }
     public function storeResponse($file, $ip, $id = null) {
         $session = session('exam');

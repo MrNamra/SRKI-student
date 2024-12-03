@@ -17,7 +17,7 @@
                     <div class="lockscreen-image" style="position: absolute; left: 1px; top: 50%; transform: translateY(-50%); background-color: #007bff; border-radius: 20px; border: none; height: 35px; width: 35px;">
                         <img src="{{ url('/dist/img/man.png') }}" alt="User Image" style="position: absolute; left: 0px; top: 48%; transform: translateY(-50%); border: none; height: 35px; width: 35px;">
                     </div>
-                    <button type="submit" class="btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background-color: #007bff; border-radius: 20px; border: none; z-index: 1;"> <!-- Added z-index -->
+                    <button type="submit" class="btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background-color: #007bff; border-radius: 20px; border: none; z-index: 9999;"> <!-- Added z-index -->
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
@@ -65,6 +65,9 @@
                             icon: 'error',
                             title: response.message,
                         });
+                        setTimeout(() => {
+                            $('.btn').removeAttr('disabled');
+                        }, 1000);
                     }
                 },
                 error: function(err) {

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StudentsController::class, 'loginpage'])->name('student.login');
 Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
-Route::get('exam', [ExamsController::class, 'index'])->name('student.exam');
+Route::get('exam', [ExamsController::class, 'index'])->middleware([InactivityLogout::class])->name('student.exam');
 Route::post('exam', [ExamsController::class, 'login'])->name('student.exam.login');
 Route::post('examsubmit', [ExamsController::class, 'store'])->name('student.exam.submit');
 
