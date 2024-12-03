@@ -33,4 +33,8 @@ class Student extends Authenticatable
     {
         return $this->hasMany(AssignmentInfo::class, 'en_no', 'enrollment_no');
     }
+    public function exam()
+    {
+        return $this->hasMany(ExamInfo::class, 'en_no', 'enrollment_no');
+    }
 }

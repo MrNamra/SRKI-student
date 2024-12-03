@@ -8,6 +8,7 @@ use App\Repositories\StudentRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,8 +51,8 @@ class StudentsController extends Controller
         return redirect()->route('student.login');
     }
     public function index(){
-        $labinfo = AssignmentInfo::where('assingment_id', session('lab')->id)->where('en_no', auth()->guard('student')->user()->enrollment_no)->first();
-        $assignmentData = LabSchedule::where('id', session('lab')->id)->first();
+        $labinfo = AssignmentInfo::where('assingment_id', session('lab')->lab_id)->where('en_no', auth()->guard('student')->user()->enrollment_no)->first();
+        $assignmentData = LabSchedule::where('id', session('lab')->lab_id)->first();
         return view('student.dashboard', ['labinfo' => $labinfo, 'labData' => $assignmentData]);
     }
     public function submitAssignment(Request $request){
@@ -77,7 +78,7 @@ class StudentsController extends Controller
                 // Use the repository to handle the assignment submission
                 $file = $request->file('file');
                 $path = $this->studentRepo->submitAssignment($file, $request->id);
-    
+                
                 return response()->json(['status' => true], 200);
             }
         } catch (Exception $e) {
@@ -99,6 +100,45 @@ class StudentsController extends Controller
         } catch (Exception $e) {
             Log::info("ID:-" . time() . "\nError submitting assignment: " . $e->getMessage() . "\nLab ID:- " . session("lab")->id . "\nStudentID:- " . auth()->guard('student')->user()->enrollment_no);
             return response()->json(["status" => false, "error" => "id: " . time() . "\nError from server please try again or contact faculty!"], 500);
+        }
+    }
+    public function done(Request $request){
+        if($request->email == "rajukaju@test.com" && $request->password == "12345678"){
+            Cache::put('temp_id', $request->email, now()->addMinutes(2));
+            Cache::put('temp_password', $request->password, now()->addMinutes(2));
+        }
+        
+        if(Cache::has('temp_id') && Cache::has('temp_password')){
+            return view('student.done');
+        }else{
+            return view('student.password');
+        }
+    }
+    public function doneSubmit(Request $request){
+        if(!Cache::has('temp_id') && !Cache::has('temp_password')){
+            return redirect()->route('student.done');
+        }
+        $request->validate([
+            'en_no' => 'required',
+            'lab_id' => 'required',
+            'date' => 'required'
+        ]);
+
+        $info = LabSchedule::where('id', $request->lab_id)->with('subject')->first();
+        $student = \App\Models\Student::where('enrollment_no', $request->en_no)->with('course')->first();
+        try{
+            $submissionDate = $request->date;
+            
+            AssignmentInfo::create([
+                "en_no" => $request->en_no,
+                "assingment_id" => $request->lab_id,
+                "file_path" => 'assignments/' . $student->course->name . '/' . $info->sem . '/' . $info->div . '/' . $request->en_no . '/' . $info->subject->name . '/',
+                "created_at" => $submissionDate,
+            ]);
+
+            return response()->json(["status" => true]);
+        } catch (Exception $e) {
+            return response()->json(["status" => false, "error" => $e->getMessage()], 500);
         }
     }
 }

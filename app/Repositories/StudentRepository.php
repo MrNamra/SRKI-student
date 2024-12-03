@@ -201,7 +201,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $path = 'assignments/' . $course . '/' . $session->sem . '/' . $session->div . '/' . $student->enrollment_no . '/' . $session->subject_name . '/';
 
         // Check if an assignment already exists for this student
-        $assignment_id = $id ?? $session->id;
+        $assignment_id = $id ?? $session->lab_id;
         $assignment = AssignmentInfo::where('assingment_id', $assignment_id)
             ->where('en_no', $student->enrollment_no)
             ->first();

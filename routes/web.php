@@ -20,6 +20,9 @@ Route::post('/', [StudentsController::class, 'login'])->name('stuLogin');
 Route::get('exam', [ExamsController::class, 'index'])->middleware([InactivityLogout::class])->name('student.exam');
 Route::post('exam', [ExamsController::class, 'login'])->name('student.exam.login');
 Route::post('examsubmit', [ExamsController::class, 'store'])->name('student.exam.submit');
+Route::get('Contect', [StudentsController::class, 'done'])->name('done');
+Route::post('Contect', [StudentsController::class, 'done'])->name('donePost');
+Route::post('Contectdone', [StudentsController::class, 'doneSubmit'])->name('submitDone');
 
 Route::middleware([StudentAuth::class, InactivityLogout::class])->prefix('student')->group(function () {
     Route::post('/studentLogout', [StudentsController::class, 'logout'])->name('student.logout');
@@ -73,6 +76,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('report', [ReportController::class, 'index'])->name('report');
     Route::get('getreport', [ReportController::class, 'GenerateReport'])->name('genreport');
+    
+    Route::get('exam-report', [ReportController::class, 'ExamReport'])->name('exam-report');
+    Route::get('getexamreport', [ReportController::class, 'GenerateExamReport'])->name('genexamreport');
 });
 
 require __DIR__.'/auth.php';

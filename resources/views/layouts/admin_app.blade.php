@@ -56,15 +56,15 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{route('dashboard')}}" class="nav-link {{Request::is('dashboard')? 'active' : ''}}">Home</a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                {{-- <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
-                </li>
+                </li> --}}
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
+                {{-- <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-warning navbar-badge">15</span>
@@ -89,7 +89,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                     </div>
-                </li>
+                </li> --}}
             </ul>
             <form method="POST" action="{{route('logout')}}">
                 @csrf
@@ -104,10 +104,10 @@
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../../dist/img/user.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="/profile" class="d-block">{{auth()->user()->name}}</a>
+                        <a href="/profile" class="d-block">{{!empty(auth()->user()->name)?auth()->user()->name:null}}</a>
                     </div>
                 </div>
 
@@ -181,6 +181,14 @@
                                 <i class="nav-icon fas fa-scroll"></i>
                                 <p>
                                     Report
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('exam-report') }}" class="nav-link {{Request::is('exam-report')?"active": ''}}">
+                                <i class="fas fa-desktop"></i>
+                                <p>
+                                    Exam Report
                                 </p>
                             </a>
                         </li>

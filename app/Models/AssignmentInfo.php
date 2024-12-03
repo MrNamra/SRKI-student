@@ -14,6 +14,7 @@ class AssignmentInfo extends Model
         'en_no',
         'assingment_id',
         'file_path',
+        'created_at',
     ];
 
     public function students(){
