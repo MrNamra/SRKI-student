@@ -50,7 +50,7 @@
                                 <option selected disabled>select Subject</option>
                             </select>
                             <div class="form-group">
-                                <label>Start & End Date and time range:</label>
+                                <label>Start & End Date and time range:Foramt (MM/DD/YYYY HH:MM)</label><br><small>set any date it will not consider</small>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>

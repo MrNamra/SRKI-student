@@ -59,7 +59,7 @@
                     <thead>
                         <tr class="thead-dark">
                             <th scope="col">#</th>
-                            <th scope="col">Course code</th>
+                            <th scope="col">Subject Name(code)</th>
                             <th scope="col">Course Name</th>
                             <th scope="col">Sem</th>
                             <th scope="col">Sub. Name</th>
@@ -234,7 +234,7 @@
                         data: 'subject_code'
                     },
                     {
-                        data: 'course_name'
+                        data: 'cource_name'
                     },
                     {
                         data: 'sem'

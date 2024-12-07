@@ -98,7 +98,7 @@
             <div class="row col-11 mt-3 ml-3">
                 <div class="col-12">
                     <div class="form-group">
-                        <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
+                        <label>Start & End Date and time range:</label><small>(MM/DD/YYYY HH:MM)</small>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -359,7 +359,7 @@
                 <div class="row col-11 mt-3 ml-3">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Start & End Date and time range:</label><small>(DD/MM/YYYY HH:MM)</small>
+                            <label>Start & End Date and time range:</label><small>(MM/DD/YYYY HH:MM)</small>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -446,7 +446,7 @@
             timePicker: true,
             timePickerIncrement: 10,
             locale: {
-                format: 'DD/MM/YYYY hh:mm A'
+                format: 'MM/DD/YYYY hh:mm A'
             }
         })
         $('.select2').select2({theme: 'bootstrap4'});
@@ -795,7 +795,7 @@
                         timePicker: true,
                         timePickerIncrement: 10,
                         locale: {
-                            format: 'DD/MM/YYYY hh:mm A'
+                            format: 'MM/DD/YYYY hh:mm A'
                         },
                         startDate: moment(res.StartDate, 'YYYY-MM-DD HH:mm:ss').set({
                             'year': new Date().getFullYear(),

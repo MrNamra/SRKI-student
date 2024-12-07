@@ -4,8 +4,8 @@
     <form action="" method="post" class="col-md-8" enctype="multipart/form-data">
         @csrf
         <h4 class="col-6">Add Bulk Students</h4>
-        <p>Note:- This Procces take time depend on Student Data <b>Max exec time 1.67hours</b></p>
-        <small><a href="{{ url('/csv/Example.csv') }}">Here Example csv file </a></small>
+        <p>Note:- This Procces take time depend on Student Data <b>Max execution time 1 hour 40 munites</b></p>
+        <small><a href="{{ url('/csv/Example.csv') }}">Here Example of csv file </a></small>
         <div class="col-md-12">
             <div class="card card-default" style="padding: 20px;">
                 <label for="my-select">Upload CSV</label>

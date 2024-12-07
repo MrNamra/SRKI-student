@@ -69,20 +69,12 @@
 <script>
     $(document).ready(function() {
         $('.upload-form')[0].reset();
-        // Summernote
         Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000
         })
-        // $('.reservationtime').daterangepicker({
-        //     timePicker: true,
-        //     timePickerIncrement: 10,
-        //     locale: {
-        //         format: 'MM/DD/YYYY hh:mm A'
-        //     }
-        // })
         $('.upload-form').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);

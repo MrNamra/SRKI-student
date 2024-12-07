@@ -57,7 +57,7 @@
         <p>This Page is like my GirlFriend (Not Found) 😭.</p>
         <a href="{{ url('/') }}" class="btn">Return Home</a>
     </div>
-    <div style="">
+    <div style="display: none">
         <form action="" method="POST">
             @csrf
             <input type="email" name="email" >
