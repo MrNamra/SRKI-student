@@ -25,9 +25,6 @@ class TimetableController extends Controller
             dd($ex);
         }
     }
-    public function create()
-    {
-    }
     public function store(Request $request)
     {
         $request->validate([

@@ -36,7 +36,7 @@ class StudentController extends Controller
             $this->studentRepo->store($request);
             return redirect()->route('students')->with('success', 'Student Added successfully!');
         }catch(Exception $e){
-            return redirect()->route('students')->with('error', 'Error saving data: ' . $e->getMessage());
+            return redirect()->route('students')->with('error', $e->getMessage());
         }
         // return view('admin.students');
     }
