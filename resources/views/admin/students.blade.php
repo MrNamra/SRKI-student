@@ -101,10 +101,10 @@ Note:- press any button below this <b>at your own risk</b> beacause after press 
         <span class="info-box-icon"><i class="fas fa-chevron-circle-down"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">Yes I Ready to take Risk</span>
-          <span class="info-box-number">41,410</span>
+            <span class="info-box-text info-box-number">Yes I Ready to take Risk</span>
           <small>
-            Deleted Students data are not recover
+            - All Students are Demoted to -1 sem<br>
+            - last sem students Data will be not Recover any more<br>(file, data from database, etc.)
           </small>
         </div>
         <!-- /.info-box-content -->

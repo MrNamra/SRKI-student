@@ -228,8 +228,8 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             }
         } else {
             $lab = LabSchedule::find($assignment_id);
-            if($assignment_id != session('lab')->sub_id)
-                return Throw new Exception('Invalid Assignment');
+            // if($assignment_id != session('lab')->sub_id)
+            //     return Throw new Exception('Invalid Assignment');
             // If it doesn't exist, create a new record
             $assignment = new AssignmentInfo();
             $assignment->id = $student->id;

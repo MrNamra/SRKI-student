@@ -38,6 +38,9 @@
     <link rel="stylesheet" href="{{url('/plugins/datatables-select/css/select.bootstrap4.min.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{url('plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- JSGride -->
+    <link rel="stylesheet" href="{{url('plugins/jsgrid/jsgrid.min.css') }}">
+    <link rel="stylesheet" href="{{url('/plugins/jsgrid/jsgrid-theme.min.css')}}">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -247,10 +250,12 @@
     <script src="{{url('/dist/js/adminlte.min.js')}}"></script>
     <!-- Select2 -->
     <script href="{{url('/plugins/select2/js/select2.full.min.js')}}"></script>
+    <!-- JsGride -->
+    {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script> --}}
     <script>
         function formatDate(dateStr) {
             const date = new Date(dateStr);
-            return date.toLocaleString('en-US', {
+            return date.toLocaleString('en-GB', {
                 month: '2-digit',
                 day: '2-digit',
                 year: 'numeric',

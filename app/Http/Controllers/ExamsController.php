@@ -27,7 +27,7 @@ class ExamsController extends Controller
             }
             $examinfo = ExamInfo::where('exam_id', session('exam')->id);
             $exam = Exam::find(session('exam')->id);
-            return view('student.examDashboard', ['exam' => $exam, 'examinfo' => $examinfo]);
+            return view('student.examDashboard', ['exam' => $exam, 'examinfo' => $examinfo->first()]);
         }
         
         return view('student.exam');
@@ -35,7 +35,7 @@ class ExamsController extends Controller
     public function login(Request $request) {
         try{
             $data = $this->examRepo->login($request->enrollment_no);
-            if($data){
+            if($data['success']){
                 return response()->json(["success" => true, "message" => "Login Successful!"], 200);
             }
             return response()->json($data);

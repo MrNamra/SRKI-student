@@ -55,7 +55,7 @@
                             <small class="text-muted"><b>Exam Type:</b> {!! $exam->examtype !!}</small> 
                             <small class="text-muted ml-4"><b>course:</b> {!! $exam->course->name !!}</small> 
                             <small class="text-muted ml-4"><b>Subject:</b> {!! $exam->subject->name !!}</small> 
-                            <small class="text-muted ml-4"><b>sem:</b> {!! $exam->sem !!}</small> 
+                            <small class="text-muted ml-4"><b>sem:</b> {!! session('exam')->sem!!}</small> 
                             <small class="text-muted ml-4"><b>Div:</b> {!! $exam->div !!}</small> 
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-4">

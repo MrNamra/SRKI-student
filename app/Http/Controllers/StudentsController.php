@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignmentInfo;
+use App\Models\LabSchedule;
 use App\Repositories\StudentRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,7 +51,8 @@ class StudentsController extends Controller
     }
     public function index(){
         $labinfo = AssignmentInfo::where('assingment_id', session('lab')->id)->where('en_no', auth()->guard('student')->user()->enrollment_no)->first();
-        return view('student.dashboard', ['labinfo' => $labinfo]);
+        $assignmentData = LabSchedule::where('id', session('lab')->id)->first();
+        return view('student.dashboard', ['labinfo' => $labinfo, 'labData' => $assignmentData]);
     }
     public function submitAssignment(Request $request){
         $request->validate([
@@ -61,15 +63,20 @@ class StudentsController extends Controller
         ]);
     
         try {
-            $assignment_id = $id ?? session('lab')->id;
-            $lab = \App\Models\LabSchedule::find($assignment_id);
-            if($assignment_id != session('lab')->sub_id)
-                return response()->json(["status" => false, "error" => "Assignmnet Not Found!"], 404);
+            $assignment_id = $request->id ?? session('lab')->id;
+            $lab = LabSchedule::find($assignment_id);
+            if(!$lab)
+                return response()->json(["status" => false, "error" => "Chalak Ban ne Ki Try kara rahahe hmm.."], 404);
+
+            if($assignment_id != session('lab')->sub_id){
+                if(session('lab')->sub_id != $lab->sub_id)
+                    return response()->json(["status" => false, "error" => "Assignmnet Not Found!\nChalak Ban ne Ki Try kara rahahe hmm.."], 404);
+            }
             
-                if ($request->hasFile('file')) {
+            if ($request->hasFile('file')) {
                 // Use the repository to handle the assignment submission
                 $file = $request->file('file');
-                $path = $this->studentRepo->submitAssignment($file, $request->id );
+                $path = $this->studentRepo->submitAssignment($file, $request->id);
     
                 return response()->json(['status' => true], 200);
             }

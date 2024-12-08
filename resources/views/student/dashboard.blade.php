@@ -47,17 +47,17 @@
                 <!-- Big Card for Lab Information -->
                 <div class="card shadow-lg border-0 rounded-lg">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="card-title">Lab Title: <strong>{{ session('lab')->title }}</strong></h3>
+                        <h3 class="card-title">Lab Title: <strong>{{ $labData->title }}</strong></h3>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div>
                                 <h5 class="font-weight-bold">Lab Description</h5>
-                                <p class="text-muted">{!! session('lab')->dec !!}</p>
+                                <p class="text-muted">{!! $labData->dec !!}</p>
                             </div>
                         </div>
-                        @if (session('lab')->file_path)
-                            <a href="{{ url(Storage::url(session('lab')->file_path)) }}" target="_blank" class="btn btn-light mb-3">
+                        @if ($labData->file_path)
+                            <a href="{{ url(Storage::url($labData->file_path)) }}" target="_blank" class="btn btn-light mb-3">
                                 <i class="fas fa-download"></i> Download File
                             </a>
                         @endif
@@ -84,7 +84,7 @@
                         </form>
                     </div>
                     <div class="card-footer text-muted text-right">
-                        <small>Due Date: <span id="last-updated">{{ \Carbon\Carbon::parse(session('lab')->EndTime)->format('Y-m-d h:i A')}}</span></small>
+                        <small>Due Date: <span id="last-updated">{{ \Carbon\Carbon::parse($labData->EndTime)->format('Y-m-d h:i A')}}</span></small>
                     </div>
                 </div>
             </div>
